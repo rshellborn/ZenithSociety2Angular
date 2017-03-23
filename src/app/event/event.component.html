@@ -1,0 +1,43 @@
+<table *ngIf="events" border="1">
+  <thead>
+    <tr>
+      <th>Created By</th>
+      <th>Creation Date</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Is Active</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let e of events; let i=index;" (click)="onSelect(c)" [class.selected]="c === selected"> 
+      <td>{{e.enteredBy}}</td>
+      <td>{{e.creationDate}}</td>
+      <td>{{e.eventFrom}}</td>
+      <td>{{e.eventTo}}</td>
+      <td>{{e.isActive}}</td>
+      <td>
+        <a [routerLink]="['/detail', e.eventId]">Edit</a>
+        <a [routerLink]="['/delete', e.eventId]">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!--<div *ngIf="selected">
+  <h2>
+    {{selected.FirstName | uppercase}} {{selected.LastName | uppercase}} is favorite cartoon character.
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>
+
+<div>
+  <p><label>First Name: </label><input [(ngModel)]="newEvent.FirstName" placeholder="First Name"></p>
+  <p><label>Last Name: </label><input [(ngModel)]="newEvent.LastName" placeholder="Last Name"></p>
+  <p><label>Occupation: </label><input [(ngModel)]="newEvent.Occupation" placeholder="Occupation"></p>
+  <p><label>Gender: </label><input [(ngModel)]="newEvent.Gender" placeholder="M or F"></p>
+  <p><label>Picture: </label><input [(ngModel)]="newEvent.Picture" placeholder="Picture URL"></p>
+  <button (click)="add(newEvent);">
+    Add
+  </button>
+</div>-->

@@ -1,0 +1,16 @@
+<div *ngIf="event">
+  <!--<p>Created By: {{event.enteredBy}}</p>
+  <p>Creation Date: {{event.creationDate}}</p>
+  <p>Start Date: {{event.eventFrom}}</p>
+  <p>End Date: {{event.eventTo}}</p>
+  <p>Is Active: {{event.isActive}}</p>-->
+  <div>
+    <p><label>Created By: </label><input [(ngModel)]="event.enteredBy" placeholder="CreatedBy"></p>
+    <p><label>Creation Date: </label><input [(ngModel)]="event.creationDate" placeholder="CreationDate"></p>
+    <p><label>Start Date: </label><input [(ngModel)]="event.eventFrom" placeholder="EventFrom"></p>
+    <p><label>End Date:: </label><input [(ngModel)]="event.eventTo" placeholder="EventTo"></p>
+    <p><label>Is Active: </label><input [(ngModel)]="event.isActive" placeholder="isActive"></p>
+  </div>
+  <button (click)="goBack()">Back</button>
+  &nbsp;&nbsp;&nbsp;&nbsp;<button (click)="save()">Save</button> 
+</div>
