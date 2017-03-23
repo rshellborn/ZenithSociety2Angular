@@ -4,7 +4,7 @@
     <p><label>Created By: </label><input [(ngModel)]="event.enteredBy" [disabled]="true" placeholder="CreatedBy"></p>
     <p><label>Creation Date: </label><input type="datetime-local" [disabled]="true" [(ngModel)]="event.creationDate" placeholder="CreationDate"></p>
     <p><label>Start Date: </label><input type="datetime-local" [(ngModel)]="event.eventFrom" placeholder="EventFrom"></p>
-    <p><label>End Date:: </label><input type="datetime-local" [(ngModel)]="event.eventTo" placeholder="EventTo"></p>
+    <p><label>End Date: </label><input type="datetime-local" [(ngModel)]="event.eventTo" placeholder="EventTo"></p>
     <p><label>Is Active: </label><input type="checkbox" [(ngModel)]="event.isActive" placeholder="isActive"></p>
   </div>
   <button (click)="goBack()">Back</button>

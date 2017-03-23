@@ -30,6 +30,9 @@ export class EventDropdownComponent implements OnInit {
 
   getCurSelActivity(): void {
     this.currentSelected = this.eventEditComponent.getId();
+
+    //set activity id in event-edit
+    this.eventEditComponent.activityId = this.currentSelected;
   }
 
   onChange(value) {
