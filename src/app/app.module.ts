@@ -10,19 +10,24 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ActivityComponent } from './activity/activity.component';
 import { ActivityEditComponent } from './activity-edit/activity-edit.component';
-import {MomentModule} from 'angular2-moment';
+import { MomentModule } from 'angular2-moment';
 import { ActivityAddComponent } from './activity-add/activity-add.component';
 import { DatePipe } from '@angular/common';
+import { EventDropdownComponent } from './event-dropdown/event-dropdown.component';
+import { EventAddComponent } from './event-add/event-add.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     EventComponent,
     EventEditComponent,
+    EventAddComponent,
     DashboardComponent,
     ActivityComponent,
     ActivityEditComponent,
     ActivityAddComponent,
+    EventDropdownComponent,
   ],
   imports: [
     BrowserModule,

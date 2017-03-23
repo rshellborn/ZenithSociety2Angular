@@ -33,21 +33,9 @@ export class EventComponent implements OnInit {
     this.router.navigate(['/event/edit/', event.eventId]);
   }
 
-  // newEvent: Event = new Event();
-  // add(newEvent: Event): void {
-  //   newEvent.FirstName = newEvent.FirstName.trim();
-  //   newEvent.LastName = newEvent.LastName.trim();
-  //   newEvent.Occupation = newEvent.Occupation.trim();
-  //   newEvent.Gender = newEvent.Gender.trim();
-  //   newEvent.Picture = newEvent.Picture.trim();
-    
-  //   if (!newEvent) { return; }
-  //   this.eventService.create(newEvent)
-  //     .then(newEvent => {
-  //       this.selected = null;
-  //       this.router.navigate(['./dashboard']);
-  //     });
-  // }
+   add(): void {
+    this.router.navigate(['/event/add']);
+  }
 
   delete(delEvent: Event): void {
     console.log('deleting event');

@@ -39,7 +39,7 @@ export class ActivityService {
   //add an activity
   create(newActivity: Activity): Promise<Activity> {
     return this.http
-      .post(`${this.BASE_URL}/activitiesapi/`, JSON.stringify(newActivity), {headers: this.headers})
+      .post(`${this.BASE_URL}/activitiesapi`, JSON.stringify(newActivity), {headers: this.headers})
       .toPromise()
       .then(res => res.json().data)
       .catch(this.handleError);

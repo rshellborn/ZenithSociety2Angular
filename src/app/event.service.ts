@@ -39,7 +39,7 @@ export class EventService {
 //add an event
   create(newEvent: Event): Promise<Event> {
     return this.http
-      .post(this.BASE_URL, JSON.stringify(newEvent), {headers: this.headers})
+      .post(`${this.BASE_URL}/eventsapi`, JSON.stringify(newEvent), {headers: this.headers})
       .toPromise()
       .then(res => res.json().data)
       .catch(this.handleError);

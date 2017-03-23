@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params }   from '@angular/router';
 import { Location }                 from '@angular/common';
 import { EventService } from '../event.service';
-import { Event } from '../event'; 
+import { Event } from '../event';
 
 @Component({
   selector: 'app-event-edit',
@@ -12,6 +12,8 @@ import { Event } from '../event';
 export class EventEditComponent implements OnInit {
 @Input()
   event: Event;
+  id: number;
+  activityId: number;
 
   constructor(
     private eventService: EventService,
@@ -21,10 +23,14 @@ export class EventEditComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
-      let id = +params['id'];
-      this.eventService.getEventById(id)
+      this.id = +params['id'];
+      this.eventService.getEventById(this.id)
         .then(result => this.event = result);
     });
+  }
+
+  getId(): number {
+    return this.id
   }
 
   goBack(): void {
@@ -32,9 +38,9 @@ export class EventEditComponent implements OnInit {
   }
 
   save(): void {
+    this.event.activityId = this.activityId;
+    console.log(this.event.activityId);
     this.eventService.update(this.event)
       .then(() => this.goBack());
   }
-
-
 }

@@ -11,7 +11,7 @@ import { Activity } from '../activity';
 })
 
 export class ActivityAddComponent implements OnInit {
-  selected: Activity
+  selected: Activity;
 
     @Input()
   activity: Activity;
@@ -24,11 +24,7 @@ export class ActivityAddComponent implements OnInit {
     private datePipe: DatePipe) { }
 
   ngOnInit() {
-    this.route.params.forEach((params: Params) => {
-      let id = +params['id'];
-      this.activityService.getActivityById(id)
-        .then(result => this.activity = result);
-    });
+    
   }
 
   goBack(): void {

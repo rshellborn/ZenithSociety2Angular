@@ -1,0 +1,20 @@
+<h3>Add Event</h3>
+<div>
+    
+    <div *ngIf="activities" style="display: inline;">
+      <select [(ngModel)]="currentSelected" (ngModelChange)="onChange($event)"> 
+        <option *ngFor="let a of activities; let i=index;" [ngValue]="a.activityId">{{a.description}}</option>
+      </select>
+    </div>
+
+
+    <p><label>Created By: </label><input [(ngModel)]="newEvent.enteredBy" placeholder="CreatedBy"></p>
+    <p><label>Start Date: </label><input type="datetime-local" [(ngModel)]="newEvent.eventFrom" placeholder="EventFrom"></p>
+    <p><label>End Date:: </label><input type="datetime-local" [(ngModel)]="newEvent.eventTo" placeholder="EventTo"></p>
+    <p><label>Is Active: </label><input type="checkbox" [(ngModel)]="newEvent.isActive" placeholder="isActive"></p>
+
+  <button (click)="goBack()">Back</button>
+  <button (click)="add(newEvent);">
+    Add
+  </button>
+</div>
