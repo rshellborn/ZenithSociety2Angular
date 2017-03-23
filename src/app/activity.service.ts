@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import {DUMMY_DATA} from './data/dummy-data';
 import { Activity } from './activity'
 import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
@@ -20,40 +19,40 @@ export class ActivityService {
   }
 
 
-//get one event by id
+//get one activity by id
   getActivityById(id: number): Promise<Activity> {
     return this.getActivities()
       .then(result => result.find(activity => activity.activityId === id));
   }
 
-// //update an event
-//   private headers = new Headers({'Content-Type': 'application/json'});
-//     update(event: Event): Promise<Event> {
-//       const url = `${this.BASE_URL}/eventsapi/${event.eventId}`;
-//       return this.http
-//         .put(url, JSON.stringify(event), {headers: this.headers})
-//         .toPromise()
-//         .then(() => event)
-//         .catch(this.handleError);
-//   }
+//update an activity
+  private headers = new Headers({'Content-Type': 'application/json'});
+    update(activity: Activity): Promise<Activity> {
+      const url = `${this.BASE_URL}/activitiesapi/${activity.activityId}`;
+      return this.http
+        .put(url, JSON.stringify(activity), {headers: this.headers})
+        .toPromise()
+        .then(() => activity)
+        .catch(this.handleError);
+  }
 
-// //add an event
-//   create(newEvent: Event): Promise<Event> {
-//     return this.http
-//       .post(this.BASE_URL, JSON.stringify(newEvent), {headers: this.headers})
-//       .toPromise()
-//       .then(res => res.json().data)
-//       .catch(this.handleError);
-//   }
+  //add an activity
+  create(newActivity: Activity): Promise<Activity> {
+    return this.http
+      .post(`${this.BASE_URL}/activitiesapi/`, JSON.stringify(newActivity), {headers: this.headers})
+      .toPromise()
+      .then(res => res.json().data)
+      .catch(this.handleError);
+  }
 
-//   //delete an event
-//   delete(id: number): Promise<void> {
-//     const url = `${this.BASE_URL}/${id}`;
-//     return this.http.delete(url, {headers: this.headers})
-//       .toPromise()
-//       .then(() => null)
-//       .catch(this.handleError);
-//   }
+  //delete an activity
+  delete(id: number): Promise<void> {
+    const url = `${this.BASE_URL}/activitiesapi/${id}`;
+    return this.http.delete(url, {headers: this.headers})
+      .toPromise()
+      .then(() => null)
+      .catch(this.handleError);
+  }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);

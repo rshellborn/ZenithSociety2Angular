@@ -1,3 +1,5 @@
+<button class="delete" (click)="add(); $event.stopPropagation()">Add</button>
+
 <table *ngIf="activities" border="1">
   <thead>
     <tr>
@@ -7,11 +9,11 @@
   </thead>
   <tbody>
     <tr *ngFor="let a of activities; let i=index;" (click)="onSelect(a)" [class.selected]="a === selected"> 
-      <td>{{a.creationDate}}</td>
+      <td><time>{{a.creationDate | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
       <td>{{a.description}}</td>
       <td>
-        <a [routerLink]="['/activity/edit', a.activityId]">Edit</a>
-        <a [routerLink]="['/delete', a.activityId]">Delete</a>
+        <button class="delete" (click)="edit(a); $event.stopPropagation()">Edit</button>
+        <button class="delete" (click)="delete(a); $event.stopPropagation()">Delete</button>
       </td>
     </tr>
   </tbody>

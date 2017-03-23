@@ -29,33 +29,21 @@ export class ActivityComponent implements OnInit {
     .then(activities => this.activities = activities);
   }
 
-  // gotoDetail(): void {
-  //   this.router.navigate(['/activity/edit', this.selected.activityId]);
-  // }
+  edit(activity: Activity): void {
+    this.router.navigate(['/activity/edit/', activity.activityId]);
+  }
 
-  // newEvent: Event = new Event();
-  // add(newEvent: Event): void {
-  //   newEvent.FirstName = newEvent.FirstName.trim();
-  //   newEvent.LastName = newEvent.LastName.trim();
-  //   newEvent.Occupation = newEvent.Occupation.trim();
-  //   newEvent.Gender = newEvent.Gender.trim();
-  //   newEvent.Picture = newEvent.Picture.trim();
-    
-  //   if (!newEvent) { return; }
-  //   this.eventService.create(newEvent)
-  //     .then(newEvent => {
-  //       this.selected = null;
-  //       this.router.navigate(['./dashboard']);
-  //     });
-  // }
+  add(): void {
+    this.router.navigate(['/activity/add']);
+  }
 
-  // delete(delActivity: Activity): void {
-  //   console.log('deleting activity');
-  //   this.activityService
-  //       .delete(delActivity.activityId)
-  //       .then(() => {
-  //         this.activities = this.activities.filter(c => c !== delActivity);
-  //         if (this.selected === delActivity) { this.selected = null; }
-  //       });
-  // }
+  delete(delActivity: Activity): void {
+    console.log('deleting activity');
+    this.activityService
+        .delete(delActivity.activityId)
+        .then(() => {
+          this.activities = this.activities.filter(c => c !== delActivity);
+          if (this.selected === delActivity) { this.selected = null; }
+        });
+  }
 }

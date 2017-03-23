@@ -31,8 +31,8 @@ export class ActivityEditComponent implements OnInit {
     this.location.back();
   }
 
-  // save(): void {
-  //   this.activityService.update(this.activity)
-  //     .then(() => this.goBack());
-  // }
+  save(): void {
+    this.activityService.update(this.activity)
+      .then(() => this.goBack());
+  }
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import {DUMMY_DATA} from './data/dummy-data';
 import { Event } from './event'
 import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
@@ -48,7 +47,7 @@ export class EventService {
 
   //delete an event
   delete(id: number): Promise<void> {
-    const url = `${this.BASE_URL}/${id}`;
+    const url = `${this.BASE_URL}/eventsapi/${id}`;
     return this.http.delete(url, {headers: this.headers})
       .toPromise()
       .then(() => null)

@@ -1,5 +1,6 @@
 <div *ngIf="activity">
   <div>
+    <p><label>Creation Date: </label><input type="datetime-local" [disabled]="true" [(ngModel)]="activity.creationDate" placeholder="CreationDate"></p>
     <p><label>Description: </label><input [(ngModel)]="activity.description" placeholder="Description"></p>
   </div>
   <button (click)="goBack()">Back</button>

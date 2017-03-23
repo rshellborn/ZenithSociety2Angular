@@ -5,6 +5,7 @@
       <th>Creation Date</th>
       <th>Start Date</th>
       <th>End Date</th>
+      <th>Activity Description</th>
       <th>Is Active</th>
       <th>Actions</th>
     </tr>
@@ -12,32 +13,15 @@
   <tbody>
     <tr *ngFor="let e of events; let i=index;" (click)="onSelect(c)" [class.selected]="c === selected"> 
       <td>{{e.enteredBy}}</td>
-      <td>{{e.creationDate}}</td>
-      <td>{{e.eventFrom}}</td>
-      <td>{{e.eventTo}}</td>
-      <td>{{e.isActive}}</td>
+      <td><time>{{e.creationDate | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
+      <td><time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
+      <td><time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
+      <td>{{e.activity.description}}</td>
+      <td><input type="checkbox" [disabled]="true" [(ngModel)]="e.isActive" /></td>
       <td>
-        <a [routerLink]="['/event/edit', e.eventId]">Edit</a>
-        <a [routerLink]="['/delete', e.eventId]">Delete</a>
+        <button class="delete" (click)="edit(e); $event.stopPropagation()">Edit</button>
+        <button class="delete" (click)="delete(e); $event.stopPropagation()">Delete</button>
       </td>
     </tr>
   </tbody>
 </table>
-
-<!--<div *ngIf="selected">
-  <h2>
-    {{selected.FirstName | uppercase}} {{selected.LastName | uppercase}} is favorite cartoon character.
-  </h2>
-  <button (click)="gotoDetail()">View Details</button>
-</div>
-
-<div>
-  <p><label>First Name: </label><input [(ngModel)]="newEvent.FirstName" placeholder="First Name"></p>
-  <p><label>Last Name: </label><input [(ngModel)]="newEvent.LastName" placeholder="Last Name"></p>
-  <p><label>Occupation: </label><input [(ngModel)]="newEvent.Occupation" placeholder="Occupation"></p>
-  <p><label>Gender: </label><input [(ngModel)]="newEvent.Gender" placeholder="M or F"></p>
-  <p><label>Picture: </label><input [(ngModel)]="newEvent.Picture" placeholder="Picture URL"></p>
-  <button (click)="add(newEvent);">
-    Add
-  </button>
-</div>-->
