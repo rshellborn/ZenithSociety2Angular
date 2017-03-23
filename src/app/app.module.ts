@@ -8,12 +8,18 @@ import { EventComponent } from './event/event.component';
 import { RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ActivityComponent } from './activity/activity.component';
+import { ActivityEditComponent } from './activity-edit/activity-edit.component';
+import { EventEditComponent } from './event-edit/event-edit.component';
 @NgModule({
   declarations: [
     AppComponent,
     EventDetailComponent,
     EventComponent,
-    DashboardComponent
+    DashboardComponent,
+    ActivityComponent,
+    ActivityEditComponent,
+    EventEditComponent
   ],
   imports: [
     BrowserModule,

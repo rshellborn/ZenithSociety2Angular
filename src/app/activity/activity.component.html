@@ -1,0 +1,18 @@
+<table *ngIf="activities" border="1">
+  <thead>
+    <tr>
+      <th>Creation Date</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let a of activities; let i=index;" (click)="onSelect(a)" [class.selected]="a === selected"> 
+      <td>{{a.creationDate}}</td>
+      <td>{{a.description}}</td>
+      <td>
+        <a [routerLink]="['/activity/edit', a.activityId]">Edit</a>
+        <a [routerLink]="['/delete', a.activityId]">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

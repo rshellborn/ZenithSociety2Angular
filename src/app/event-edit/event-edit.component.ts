@@ -5,12 +5,12 @@ import { EventService } from '../event.service';
 import { Event } from '../event'; 
 
 @Component({
-  selector: 'app-event-detail',
-  templateUrl: './event-detail.component.html',
-  styleUrls: ['./event-detail.component.css']
+  selector: 'app-event-edit',
+  templateUrl: './event-edit.component.html',
+  styleUrls: ['./event-edit.component.css']
 })
-export class EventDetailComponent implements OnInit {
-  @Input()
+export class EventEditComponent implements OnInit {
+@Input()
   event: Event;
 
   constructor(
@@ -35,5 +35,6 @@ export class EventDetailComponent implements OnInit {
     this.eventService.update(this.event)
       .then(() => this.goBack());
   }
+
 
 }

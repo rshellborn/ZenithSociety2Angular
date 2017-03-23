@@ -23,7 +23,6 @@ export class EventService {
 //get one event by id
   getEventById(id: number): Promise<Event> {
     return this.getEvents()
-    //change personId to eventId
       .then(result => result.find(event => event.eventId === id));
   }
 
