@@ -1,4 +1,4 @@
 <h3>This Weeks Events</h3>
-<p *ngFor="let c of events" class="col-1-4">
-      {{c.start}} {{c.activity.description}}
+<p *ngFor="let e of events" class="col-1-4">
+      <time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time> - <time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time> {{e.activity.description}}
 </p>
