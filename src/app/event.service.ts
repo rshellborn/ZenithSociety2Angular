@@ -7,12 +7,13 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class EventService {
   private BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net/api"; 
+  private headers = new Headers({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
 
   constructor(private http: Http) { } 
   
   //get all events
-  getEvents(): Promise<Event[]> {   
-    return this.http.get(`${this.BASE_URL}/eventsapi`)
+  getEvents(): Promise<Event[]> {
+    return this.http.get(`${this.BASE_URL}/eventsapi`, {headers: this.headers})
       .toPromise()
       .then(response => response.json() as Event[])
       .catch(this.handleError);
@@ -26,7 +27,6 @@ export class EventService {
   }
 
 //update an event
-  private headers = new Headers({'Content-Type': 'application/json'});
     update(event: Event): Promise<Event> {
       const url = `${this.BASE_URL}/eventsapi/${event.eventId}`;
       return this.http

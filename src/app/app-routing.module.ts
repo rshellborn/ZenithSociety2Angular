@@ -7,6 +7,7 @@ import { EventAddComponent } from './event-add/event-add.component';
 import { ActivityComponent } from './activity/activity.component';
 import { ActivityEditComponent } from './activity-edit/activity-edit.component';
 import { ActivityAddComponent } from './activity-add/activity-add.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'events',     component: EventComponent },
   { path: 'activities', component: ActivityComponent },
   { path: 'activity/add', component: ActivityAddComponent },
-  { path: 'event/add', component: EventAddComponent }
+  { path: 'event/add', component: EventAddComponent },
+  { path: 'login', component: LoginComponent }
 ];
 
 @NgModule({

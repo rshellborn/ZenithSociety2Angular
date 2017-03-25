@@ -2,3 +2,11 @@
 <p *ngFor="let e of events" class="col-1-4">
       <time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time> - <time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time> {{e.activity.description}}
 </p>
+ &nbsp;&nbsp;&nbsp;&nbsp;<button (click)="save()">Save</button> 
+<!--<h3>This Weeks Events</h3>
+<table *ngFor="let d of eventDisplay" class="col-1-4" border=1>-->
+      <!--<tr>{{ d.date }}</tr>-->
+
+      <!--<td *ngFor="let e of d.events">{{ e.eventFrom }}</td>-->
+      <!--<time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time> - <time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time> {{e.activity.description}}-->
+<!--</table>-->

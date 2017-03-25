@@ -15,6 +15,8 @@ import { ActivityAddComponent } from './activity-add/activity-add.component';
 import { DatePipe } from '@angular/common';
 import { EventDropdownComponent } from './event-dropdown/event-dropdown.component';
 import { EventAddComponent } from './event-add/event-add.component';
+import { LoginComponent } from './login/login.component';
+import { LoginService } from './login.service'
 
 
 @NgModule({
@@ -28,6 +30,7 @@ import { EventAddComponent } from './event-add/event-add.component';
     ActivityEditComponent,
     ActivityAddComponent,
     EventDropdownComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,7 @@ import { EventAddComponent } from './event-add/event-add.component';
     AppRoutingModule,
     MomentModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, LoginService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
