@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LoginService } from '../login.service';
+import { Router }   from '@angular/router';
 import { Login } from '../login';
 import { Token } from '../token';
 
@@ -12,26 +13,32 @@ import { Token } from '../token';
 export class LoginComponent implements OnInit {
   @Input()
   result: Token;
+  error: string;
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) { }
 
   ngOnInit() {
   }
 
-  login(): void {
-    var login = new Login;
-    login.grant_type = "password";
-    login.username = "rachel";
-    login.password = "Test,123";
-
-    let data = "grant_type=" + login.grant_type + "&username=" + login.username + "&password=" + login.password;
+  login(login: Login): void {
+    let data = "grant_type=password&username=" + login.username + "&password=" + login.password;
 
     console.log((data));
 
     this.loginService.login(data)
-        .then(result => this.getToken(result));
+        .then(result => { 
+          this.getToken(result)
+          this.router.navigate(['./dashboard']);
+          })
+        .catch(error => this.setError(error));
+  }
+
+  setError(error: any): void {
+    var errorMsg = error.json();
+    this.error = errorMsg;
   }
 
   getToken(result: Token): void {

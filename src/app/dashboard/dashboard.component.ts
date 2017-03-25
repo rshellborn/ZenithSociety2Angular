@@ -24,39 +24,35 @@ export class DashboardComponent implements OnInit {
 
   getEvents(): void {
     this.eventService.getEvents()
-      .then(results => this.events = results);
-
-
-      // while(typeof this.events == 'undefined') {
-      //   console.log('undefined');
-      // }
+      .then(results => {
+        this.events = results;
+        //this.sortEvents();
+      });
   }
 
   sortEvents(): void {
-    console.log('executing');
-    console.log("event1: " + this.events);
-    // var prevDate = this.events[0].eventFrom;
-    // var index = 0;
-    // let firstIt = true;
+    var prevDate = this.events[0].eventFrom;
+    var index = 0;
+    let firstIt = true;
 
-    // for(var i = 0; i < this.events.length; i++) {
-    //   console.log('iterating');
-    //   var date = event[i].eventFrom;
+    for(var i = 0; i < this.events.length; i++) {
+      console.log('iterating');
+      var date = event[i].eventFrom;
 
-    //   //create a new table row with the new date
-    //   if(prevDate != date) {
-    //     if(firstIt != true) {
-    //       this.eventDisplay.push(newEventDisplay);
-    //     } else {
-    //       firstIt = false;
-    //     }
+      //create a new table row with the new date
+      if(prevDate != date) {
+        if(firstIt != true) {
+          this.eventDisplay.push(newEventDisplay);
+        } else {
+          firstIt = false;
+        }
 
-    //     var newEventDisplay = new EventDisplay;
-    //     newEventDisplay.date = date;
-    //   }
+        var newEventDisplay = new EventDisplay;
+        newEventDisplay.date = date;
+      }
 
-    //   newEventDisplay.event.push(event[i]);
-    // }
+      newEventDisplay.event.push(event[i]);
+    }
   }
 
 }
