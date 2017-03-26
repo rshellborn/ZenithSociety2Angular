@@ -1,12 +1,25 @@
-<div *ngIf="event">
+<div *ngIf="event" class="container container-small">
   <div>
-    <p><label>Activity Id: </label><app-event-dropdown></app-event-dropdown></p>
-    <p><label>Created By: </label><input [(ngModel)]="event.enteredBy" [disabled]="true" placeholder="CreatedBy"></p>
-    <p><label>Creation Date: </label><input type="datetime-local" [disabled]="true" [(ngModel)]="event.creationDate" placeholder="CreationDate"></p>
-    <p><label>Start Date: </label><input type="datetime-local" [(ngModel)]="event.eventFrom" placeholder="EventFrom"></p>
-    <p><label>End Date: </label><input type="datetime-local" [(ngModel)]="event.eventTo" placeholder="EventTo"></p>
-    <p><label>Is Active: </label><input type="checkbox" [(ngModel)]="event.isActive" placeholder="isActive"></p>
+    <h1 class="text-center">Event Edit</h1>
+    <div class="form-group">
+      <label>Activity Id: </label>
+      <app-event-dropdown></app-event-dropdown>
+    </div>
+    <div class="form-group">
+      <label>Start Date: </label>
+      <input class="form-control" type="datetime-local" [(ngModel)]="event.eventFrom" placeholder="EventFrom">
+    </div>
+    <div class="form-group">
+      <label>End Date: </label>
+      <input class="form-control" type="datetime-local" [(ngModel)]="event.eventTo" placeholder="EventTo">
+    </div>
+    <div class="form-group">
+      <label>Is Active: </label>
+      <input style="display: inline;" type="checkbox" [(ngModel)]="event.isActive" placeholder="isActive">
+    </div>
   </div>
-  <button (click)="goBack()">Back</button>
-  &nbsp;&nbsp;&nbsp;&nbsp;<button (click)="save()">Save</button> 
+  <div class="text-center">
+    <button class="btn btn-primary" (click)="goBack()">Back</button>
+    <button class="btn btn-success" (click)="save()">Save</button> 
+  </div>
 </div>

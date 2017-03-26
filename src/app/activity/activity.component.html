@@ -1,20 +1,23 @@
-<button class="delete" (click)="add(); $event.stopPropagation()">Add</button>
+<div class="container">
+  <h1 class="text-center">Activities</h1>
 
-<table *ngIf="activities" border="1">
-  <thead>
-    <tr>
-      <th>Creation Date</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let a of activities; let i=index;" (click)="onSelect(a)" [class.selected]="a === selected"> 
-      <td><time>{{a.creationDate | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
-      <td>{{a.description}}</td>
-      <td>
-        <button class="delete" (click)="edit(a); $event.stopPropagation()">Edit</button>
-        <button class="delete" (click)="delete(a); $event.stopPropagation()">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <table *ngIf="activities" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th class="text-center">Creation Date</th>
+        <th class="text-center">Description</th>
+        <th class="text-center"><button class="btn btn-primary" (click)="add(); $event.stopPropagation()">Add</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of activities; let i=index;" (click)="onSelect(a)" [class.selected]="a === selected"> 
+        <td><time>{{a.creationDate | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
+        <td>{{a.description}}</td>
+        <td class="text-center">
+          <button class="btn btn-success" (click)="edit(a); $event.stopPropagation()">Edit</button>
+          <button class="btn btn-danger" (click)="delete(a); $event.stopPropagation()">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

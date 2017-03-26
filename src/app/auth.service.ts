@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class LoginService {
+export class AuthService {
   private BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net"; 
   private headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
 
@@ -24,5 +24,7 @@ export class LoginService {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);
   }
+
+  
 
 }

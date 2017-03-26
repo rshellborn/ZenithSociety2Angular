@@ -57,8 +57,7 @@ export class EventAddComponent implements OnInit {
    newEvent: Event = new Event();
   add(newEvent: Event): void {
     
-    //eventually change to get currently logged in user
-    newEvent.enteredBy = newEvent.enteredBy;
+    newEvent.enteredBy = localStorage.getItem('user');
 
     newEvent.activityId = this.activityId
     newEvent.creationDate = new Date();

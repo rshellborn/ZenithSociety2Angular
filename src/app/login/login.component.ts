@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { LoginService } from '../login.service';
+import { AuthService } from '../auth.service';
 import { Router }   from '@angular/router';
 import { Login } from '../login';
 import { Token } from '../token';
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   error: string;
 
   constructor(
-    private loginService: LoginService,
+    private authService: AuthService,
     private router: Router
   ) { }
 
@@ -26,11 +26,9 @@ export class LoginComponent implements OnInit {
   login(login: Login): void {
     let data = "grant_type=password&username=" + login.username + "&password=" + login.password;
 
-    console.log((data));
-
-    this.loginService.login(data)
+    this.authService.login(data)
         .then(result => { 
-          this.getToken(result);
+          this.getToken(result, login.username);
           this.getRole();
           this.router.navigate(['./home']);
           })
@@ -42,13 +40,14 @@ export class LoginComponent implements OnInit {
     this.error = errorMsg;
   }
 
-  getToken(result: Token): void {
+  getToken(result: Token, username: string): void {
     this.result = result;
     var token = this.result.token_type + " " + this.result.access_token;
 
     localStorage.setItem('token', token);
     localStorage.setItem('loggedIn', "true");
     localStorage.setItem('refresh', "true");
+    localStorage.setItem('user', username);
 
     console.log(localStorage.getItem('token'));
   }
