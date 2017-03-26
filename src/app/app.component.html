@@ -1,9 +1,16 @@
 <h1>{{title}}</h1>
 <nav>
-  <a routerLink="/dashboard">Dashboard</a>
-  <a routerLink="/events">Events</a>
-  <a routerLink="/activities">Activities</a>
-  <a routerLink="/register">Register</a>
-  <a routerLink="/login">Login</a>
+  <a routerLink="/home">Home</a>
+  <div *ngIf="loggedIn == true" style="display: inline;">
+    <div *ngIf="role == 'Admin'" style="display: inline;">
+      <a routerLink="/events">Events</a>
+      <a routerLink="/activities">Activities</a>
+    </div>
+    <a routerLink="/logout">Logout</a>
+  </div>
+  <div *ngIf="loggedIn == false" style="display: inline;">
+    <a routerLink="/register">Register</a>
+    <a routerLink="/login">Login</a>
+  </div>
 </nav> 
 <router-outlet></router-outlet>

@@ -31,6 +31,11 @@ export class EventAddComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    //check if user is admin role
+    if(localStorage.getItem('role') != "Admin") {
+      this.router.navigate(['./home']);
+    }
+    
     this.getActivities();
     this.currentSelected = 1;
   }

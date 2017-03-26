@@ -16,8 +16,9 @@ import { DatePipe } from '@angular/common';
 import { EventDropdownComponent } from './event-dropdown/event-dropdown.component';
 import { EventAddComponent } from './event-add/event-add.component';
 import { LoginComponent } from './login/login.component';
-import { LoginService } from './login.service'
-
+import { LoginService } from './login.service';
+import { LogoutComponent } from './logout/logout.component'
+import { AlertModule } from 'ng2-bootstrap';
 
 @NgModule({
   declarations: [
@@ -31,13 +32,15 @@ import { LoginService } from './login.service'
     ActivityAddComponent,
     EventDropdownComponent,
     LoginComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    MomentModule
+    MomentModule,
+    AlertModule.forRoot()
   ],
   providers: [DatePipe, LoginService],
   bootstrap: [AppComponent],

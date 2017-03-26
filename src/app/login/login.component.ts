@@ -30,8 +30,9 @@ export class LoginComponent implements OnInit {
 
     this.loginService.login(data)
         .then(result => { 
-          this.getToken(result)
-          this.router.navigate(['./dashboard']);
+          this.getToken(result);
+          this.getRole();
+          this.router.navigate(['./home']);
           })
         .catch(error => this.setError(error));
   }
@@ -43,12 +44,17 @@ export class LoginComponent implements OnInit {
 
   getToken(result: Token): void {
     this.result = result;
-    
     var token = this.result.token_type + " " + this.result.access_token;
 
     localStorage.setItem('token', token);
+    localStorage.setItem('loggedIn', "true");
+    localStorage.setItem('refresh', "true");
 
     console.log(localStorage.getItem('token'));
+  }
+
+  getRole(): void {
+    localStorage.setItem('role', "Admin");
   }
 
 }

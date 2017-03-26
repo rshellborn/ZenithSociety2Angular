@@ -8,17 +8,19 @@ import { ActivityComponent } from './activity/activity.component';
 import { ActivityEditComponent } from './activity-edit/activity-edit.component';
 import { ActivityAddComponent } from './activity-add/activity-add.component';
 import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard',  component: DashboardComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home',  component: DashboardComponent },
   { path: 'event/edit/:id', component: EventEditComponent },
   { path: 'activity/edit/:id', component: ActivityEditComponent },
   { path: 'events',     component: EventComponent },
   { path: 'activities', component: ActivityComponent },
   { path: 'activity/add', component: ActivityAddComponent },
   { path: 'event/add', component: EventAddComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent }
 ];
 
 @NgModule({

@@ -24,7 +24,10 @@ export class ActivityAddComponent implements OnInit {
     private datePipe: DatePipe) { }
 
   ngOnInit() {
-    
+    //check if user is admin role
+    if(localStorage.getItem('role') != "Admin") {
+      this.router.navigate(['./home']);
+    }
   }
 
   goBack(): void {

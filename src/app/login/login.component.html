@@ -1,6 +1,6 @@
 <span>{{ error?.error_description }}</span>
 
 <p><label>Username: </label><input [(ngModel)]="login.username" placeholder="Username"></p>
-<p><label>Password: </label><input [(ngModel)]="login.password" placeholder="Password"></p>
+<p><label>Password: </label><input type="password" [(ngModel)]="login.password" placeholder="Password"></p>
 
 <button (click)="login(login)">Login</button> 

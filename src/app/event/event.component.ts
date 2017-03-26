@@ -17,6 +17,11 @@ export class EventComponent implements OnInit {
   private router: Router) { }
 
   ngOnInit(): void {
+    //check if user is admin role
+    if(localStorage.getItem('role') != "Admin") {
+      this.router.navigate(['./home']);
+    }
+    
     this.getEvents();
   }
 

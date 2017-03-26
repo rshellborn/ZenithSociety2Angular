@@ -18,6 +18,11 @@ export class ActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.getActivities();
+
+    //check if user is admin role
+    if(localStorage.getItem('role') != "Admin") {
+      this.router.navigate(['./home']);
+    }
   }
 
   onSelect(activity: Activity): void {

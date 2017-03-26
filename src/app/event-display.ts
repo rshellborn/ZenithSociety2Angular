@@ -1,4 +1,4 @@
 export class EventDisplay {
-    event: Event[];
-    date: Date;
+    event: Object[];
+    date: string;
 }

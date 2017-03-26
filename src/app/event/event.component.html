@@ -15,8 +15,8 @@
   <tbody>
     <tr *ngFor="let e of events; let i=index;" (click)="onSelect(c)" [class.selected]="c === selected"> 
       <td>{{e.enteredBy}}</td>
-      <td><time>{{e.creationDate | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
-      <td><time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
+      <td><time>{{e.creationDate+ "-08:00" | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
+      <td><time>{{e.eventFrom | date: "h:mm a" }} </time></td>
       <td><time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
       <td>{{e.activity.description}}</td>
       <td><input type="checkbox" [disabled]="true" [(ngModel)]="e.isActive" /></td>
