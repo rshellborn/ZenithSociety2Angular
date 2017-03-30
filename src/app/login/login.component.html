@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="col-md-4 col-md-offset-4">
+        <span id="error">{{ error?.error_description }}</span><br/>
+
+        <label>Username: </label>
+        <input class="form-control" [(ngModel)]="login.username" placeholder="Username">
+        <label>Password: </label>
+        <input class="form-control" type="password" [(ngModel)]="login.password" placeholder="Password">
+        <br/>
+        <div class="text-center">
+            <button class="btn btn-primary" (click)="login(login)">Login</button> 
+        </div>
+    </div>
+</div>

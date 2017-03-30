@@ -7,12 +7,13 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class ActivityService {
   private BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net/api"; 
+  private headers = new Headers({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
 
   constructor(private http: Http) { } 
   
   //get all events
   getActivities(): Promise<Activity[]> {   
-    return this.http.get(`${this.BASE_URL}/activitiesapi`)
+    return this.http.get(`${this.BASE_URL}/activitiesapi`, {headers: this.headers})
       .toPromise()
       .then(response => response.json() as Activity[])
       .catch(this.handleError);
@@ -26,7 +27,6 @@ export class ActivityService {
   }
 
 //update an activity
-  private headers = new Headers({'Content-Type': 'application/json'});
     update(activity: Activity): Promise<Activity> {
       const url = `${this.BASE_URL}/activitiesapi/${activity.activityId}`;
       return this.http

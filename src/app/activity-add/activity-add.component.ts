@@ -12,6 +12,7 @@ import { Activity } from '../activity';
 
 export class ActivityAddComponent implements OnInit {
   selected: Activity;
+  error: string;
 
     @Input()
   activity: Activity;
@@ -24,7 +25,10 @@ export class ActivityAddComponent implements OnInit {
     private datePipe: DatePipe) { }
 
   ngOnInit() {
-    
+    //check if user is admin role
+    if(localStorage.getItem('role') != "Admin") {
+      this.router.navigate(['./home']);
+    }
   }
 
   goBack(): void {
@@ -34,6 +38,12 @@ export class ActivityAddComponent implements OnInit {
   newActivity: Activity = new Activity();
   add(newActivity: Activity): void {
     newActivity.creationDate = new Date();
+
+    if(newActivity.description == undefined) {
+        this.setError("Description cannot be empty.");
+        return;
+    }
+
     newActivity.description = newActivity.description.trim();
     
     if (!newActivity) { return; }
@@ -43,5 +53,9 @@ export class ActivityAddComponent implements OnInit {
         this.selected = null;
         this.router.navigate(['./activities']);
       });
+  }
+
+  setError(errorMsg: string): void {
+    this.error = errorMsg;
   }
 }

@@ -15,6 +15,7 @@ export class EventAddComponent implements OnInit {
   activities: Activity[];
   activityId: number;
   currentSelected: number;
+  error: string;
 
   selected: Event;
 
@@ -31,6 +32,11 @@ export class EventAddComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    //check if user is admin role
+    if(localStorage.getItem('role') != "Admin") {
+      this.router.navigate(['./home']);
+    }
+    
     this.getActivities();
     this.currentSelected = 1;
   }
@@ -52,14 +58,28 @@ export class EventAddComponent implements OnInit {
    newEvent: Event = new Event();
   add(newEvent: Event): void {
     
-    //eventually change to get currently logged in user
-    newEvent.enteredBy = newEvent.enteredBy;
-
+    newEvent.enteredBy = localStorage.getItem("username");
     newEvent.activityId = this.activityId
     newEvent.creationDate = new Date();
     newEvent.eventFrom = this.newEvent.eventFrom;
     newEvent.eventTo = this.newEvent.eventTo;
-    newEvent.isActive = newEvent.isActive;
+
+    if(newEvent.eventFrom == undefined || 
+       newEvent.eventTo == undefined) {
+        this.setError("Enter a start time and end time.");
+        return;
+    }
+
+    if(newEvent.eventFrom > newEvent.eventTo || newEvent.eventFrom == newEvent.eventTo) {
+        this.setError("Start time must be before end time.");
+        return;
+    }
+
+    if(newEvent.isActive == true) {
+      newEvent.isActive = true;
+    } else {
+      newEvent.isActive = false;
+    }
     
     if (!newEvent) { return; }
 
@@ -68,5 +88,9 @@ export class EventAddComponent implements OnInit {
         this.selected = null;
         this.router.navigate(['./events']);
       });
+  }
+
+  setError(errorMsg: string): void {
+    this.error = errorMsg;
   }
 }

@@ -1,8 +1,13 @@
-<div *ngIf="activity">
+<div *ngIf="activity" class="container container-small">
   <div>
-    <p><label>Creation Date: </label><input type="datetime-local" [disabled]="true" [(ngModel)]="activity.creationDate" placeholder="CreationDate"></p>
-    <p><label>Description: </label><input [(ngModel)]="activity.description" placeholder="Description"></p>
+    <h1 class="text-center">Activity Edit</h1>
+        <span *ngIf="error" id="error">{{ error }}</span><br/>
+    <div class="form-group">
+      <label>Description: </label>
+      <input class="form-control" type="text" [(ngModel)]="activity.description" placeholder="Description">
+    </div>
+  <div class="text-center">
+    <button class="btn btn-primary" (click)="goBack()">Back</button>
+    <button class="btn btn-success" (click)="save()">Save</button> 
   </div>
-  <button (click)="goBack()">Back</button>
-  &nbsp;&nbsp;&nbsp;&nbsp;<button (click)="save()">Save</button> 
 </div>

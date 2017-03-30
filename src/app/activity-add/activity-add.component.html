@@ -1,9 +1,13 @@
-<h3>Add Activity</h3>
-<div>
-  <p><label>Description: </label><input [(ngModel)]="newActivity.description" placeholder="Description"></p>
-
-  <button (click)="goBack()">Back</button>
-  <button (click)="add(newActivity);">
-    Add
-  </button>
+<div class="container container-small">
+  <div>
+    <h1 class="text-center">Add Activity</h1>
+        <span *ngIf="error" id="error">{{ error }}</span><br/>
+    <div class="form-group">
+      <label>Description: </label>
+      <input class="form-control" type="text" [(ngModel)]="newActivity.description" placeholder="Description">
+    </div>
+  <div class="text-center">
+    <button class="btn btn-primary" (click)="goBack()">Back</button>
+    <button class="btn btn-success" (click)="add(newActivity)">Add</button> 
+  </div>
 </div>

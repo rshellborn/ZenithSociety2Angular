@@ -15,7 +15,12 @@ import { ActivityAddComponent } from './activity-add/activity-add.component';
 import { DatePipe } from '@angular/common';
 import { EventDropdownComponent } from './event-dropdown/event-dropdown.component';
 import { EventAddComponent } from './event-add/event-add.component';
-
+import { LoginComponent } from './login/login.component';
+import { AuthService } from './auth.service';
+import { LogoutComponent } from './logout/logout.component'
+import { AlertModule } from 'ng2-bootstrap';
+import { RegisterComponent } from './register/register.component';
+import { RoleComponent } from './role/role.component';
 
 @NgModule({
   declarations: [
@@ -28,15 +33,20 @@ import { EventAddComponent } from './event-add/event-add.component';
     ActivityEditComponent,
     ActivityAddComponent,
     EventDropdownComponent,
+    LoginComponent,
+    LogoutComponent,
+    RegisterComponent,
+    RoleComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    MomentModule
+    MomentModule,
+    AlertModule.forRoot()
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, AuthService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

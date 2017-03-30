@@ -1,5 +1,5 @@
 <div *ngIf="activities" style="display: inline;">
-  <select [(ngModel)]="currentSelected" (ngModelChange)="onChange($event)"> 
+  <select [(ngModel)]="currentSelected" (ngModelChange)="onChange($event)" class="form-control"> 
     <option *ngFor="let a of activities; let i=index;" [ngValue]="a.activityId">{{a.description}}</option>
   </select>
 </div>

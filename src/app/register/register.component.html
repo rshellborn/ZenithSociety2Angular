@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="col-md-4 col-md-offset-4">
+        <span id="error">{{ error?.error_description }}</span>
+        <span id="message">{{ message?.value }}</span><br/>
+
+        <label>Username: </label>
+        <input class="form-control" [(ngModel)]="register.username" placeholder="Username">
+
+        <label>First Name: </label>
+        <input class="form-control" [(ngModel)]="register.firstname" placeholder="First Name">
+
+        <label>Last Name: </label>
+        <input class="form-control" [(ngModel)]="register.lastname" placeholder="Last Name">
+
+        <label>Email: </label>
+        <input class="form-control" [(ngModel)]="register.email" placeholder="Email">
+
+
+        <label>Password: </label>
+        <input class="form-control" type="password" [(ngModel)]="register.password" placeholder="Password">
+         <label>Confirm Password: </label>
+        <input class="form-control" type="password" [(ngModel)]="register.confirmPassword" placeholder="Password">
+        <br/>
+        <div class="text-center">
+            <button class="btn btn-primary" (click)="registerUser(register)">Register</button> 
+        </div>
+    </div>
+</div>

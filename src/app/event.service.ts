@@ -7,12 +7,21 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class EventService {
   private BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net/api"; 
+  private headers = new Headers({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
 
   constructor(private http: Http) { } 
   
   //get all events
-  getEvents(): Promise<Event[]> {   
-    return this.http.get(`${this.BASE_URL}/eventsapi`)
+  getAllEvents(): Promise<Event[]> {
+    return this.http.get(`${this.BASE_URL}/eventsapi/all`, {headers: this.headers})
+      .toPromise()
+      .then(response => response.json() as Event[])
+      .catch(this.handleError);
+  }
+
+  //get all events
+  getEvents(): Promise<Event[]> {
+    return this.http.get(`${this.BASE_URL}/eventsapi`, {headers: this.headers})
       .toPromise()
       .then(response => response.json() as Event[])
       .catch(this.handleError);
@@ -26,7 +35,6 @@ export class EventService {
   }
 
 //update an event
-  private headers = new Headers({'Content-Type': 'application/json'});
     update(event: Event): Promise<Event> {
       const url = `${this.BASE_URL}/eventsapi/${event.eventId}`;
       return this.http
@@ -51,6 +59,13 @@ export class EventService {
     return this.http.delete(url, {headers: this.headers})
       .toPromise()
       .then(() => null)
+      .catch(this.handleError);
+  }
+
+  getNewWeek(num: number): Promise<Event[]>{
+    return this.http.get(this.BASE_URL + '/eventsapi/' + num.toString(), {headers: this.headers})
+      .toPromise()
+      .then(response => response.json() as Event[])
       .catch(this.handleError);
   }
 

@@ -9,4 +9,19 @@ import { ActivityService } from './activity.service';
 })
 export class AppComponent {
   title = 'Zenith Society';
+  loggedIn: boolean;
+  role: string;
+  username: string;
+
+  ngOnInit() {
+
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+      this.role = localStorage.getItem("role");
+      this.username = localStorage.getItem("username");
+  }
 }
