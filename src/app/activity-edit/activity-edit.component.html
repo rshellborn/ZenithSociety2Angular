@@ -1,6 +1,7 @@
 <div *ngIf="activity" class="container container-small">
   <div>
     <h1 class="text-center">Activity Edit</h1>
+        <span *ngIf="error" id="error">{{ error }}</span><br/>
     <div class="form-group">
       <label>Description: </label>
       <input class="form-control" type="text" [(ngModel)]="activity.description" placeholder="Description">

@@ -36,8 +36,6 @@ export class EventDropdownComponent implements OnInit {
   }
 
   onChange(value) {
-    console.log(value);
-
     this.activityId = value;
 
     //set activity id in event-edit

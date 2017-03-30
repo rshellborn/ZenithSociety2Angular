@@ -11,6 +11,7 @@ export class AppComponent {
   title = 'Zenith Society';
   loggedIn: boolean;
   role: string;
+  username: string;
 
   ngOnInit() {
 
@@ -21,5 +22,6 @@ export class AppComponent {
     }
 
       this.role = localStorage.getItem("role");
+      this.username = localStorage.getItem("username");
   }
 }

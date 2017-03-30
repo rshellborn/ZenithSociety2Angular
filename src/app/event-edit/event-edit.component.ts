@@ -14,6 +14,7 @@ export class EventEditComponent implements OnInit {
   event: Event;
   id: number;
   activityId: number;
+  error: string;
 
   constructor(
     private eventService: EventService,
@@ -36,7 +37,7 @@ export class EventEditComponent implements OnInit {
   }
 
   getId(): number {
-    return this.id
+    return this.event.activityId
   }
 
   goBack(): void {
@@ -45,8 +46,29 @@ export class EventEditComponent implements OnInit {
 
   save(): void {
     this.event.activityId = this.activityId;
-    console.log(this.event.activityId);
+
+    if(this.event.isActive == true) {
+      this.event.isActive = true;
+    } else {
+      this.event.isActive = false;
+    }
+
+    if(this.event.eventFrom == undefined || 
+       this.event.eventTo == undefined) {
+        this.setError("Enter a start time and end time.");
+        return;
+    }
+
+    if(this.event.eventFrom > this.event.eventTo || this.event.eventFrom == this.event.eventTo) {
+        this.setError("Start time must be before end time.");
+        return;
+    }
+
     this.eventService.update(this.event)
       .then(() => this.goBack());
+  }
+
+  setError(errorMsg: string): void {
+    this.error = errorMsg;
   }
 }

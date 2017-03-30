@@ -11,6 +11,7 @@
   </ul>
 
   <ul class="nav navbar-nav navbar-right" style="margin-right: 2px;">
+    <li *ngIf="loggedIn == true"><a href="#">Hello {{username}}!</a></li>
     <li *ngIf="loggedIn == true"><a routerLink="/logout">Logout</a></li>
     <li *ngIf="loggedIn == false"><a routerLink="/register">Register</a></li>
     <li *ngIf="loggedIn == false"><a routerLink="/login">Login</a></li>

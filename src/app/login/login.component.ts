@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('token', token);
     localStorage.setItem('loggedIn', "true");
     localStorage.setItem('refresh', "true");
-    localStorage.setItem('user', username);
+    localStorage.setItem('username', username);
 
     console.log(localStorage.getItem('token'));
   }

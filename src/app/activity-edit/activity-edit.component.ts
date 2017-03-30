@@ -12,6 +12,7 @@ import { Activity } from '../activity';
 export class ActivityEditComponent implements OnInit {
   @Input()
   activity: Activity;
+  error: string;
 
   constructor(
     private activityService: ActivityService,
@@ -38,7 +39,16 @@ export class ActivityEditComponent implements OnInit {
   }
 
   save(): void {
+    if(this.activity.description.length == 0) {
+        this.setError("Description cannot be empty.");
+        return;
+    }
+
     this.activityService.update(this.activity)
       .then(() => this.goBack());
+  }
+
+  setError(errorMsg: string): void {
+    this.error = errorMsg;
   }
 }

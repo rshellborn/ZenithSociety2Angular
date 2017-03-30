@@ -1,6 +1,7 @@
 <div class="container">
     <div class="col-md-4 col-md-offset-4">
-        <span>{{ error?.error_description }}</span>
+        <span id="error">{{ error?.error_description }}</span>
+        <span id="message">{{ message?.value }}</span><br/>
 
         <label>Username: </label>
         <input class="form-control" [(ngModel)]="register.username" placeholder="Username">

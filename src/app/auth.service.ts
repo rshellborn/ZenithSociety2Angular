@@ -20,11 +20,16 @@ export class AuthService {
       .catch(this.handleError);
   }
 
+  register(data: string): Promise<Object> {
+    return this.http
+      .post(`${this.BASE_URL}/connect/register`, data, {headers: this.headers})
+      .toPromise()
+      .then(response => response.json() as Object)
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);
   }
-
-  
-
 }

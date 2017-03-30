@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   eventDisplay: EventDisplay[];
   count: number = 0;
   role: string;
+  loggedIn: string;
 
   eventsKeys: string[] = [];                          // array of keys in the eventsDictionary
   eventsDictionary: { [key: string]: Event[] } = {}; // [ Day => Event ]
@@ -28,6 +29,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.getEvents();
 
+    this.loggedIn = localStorage.getItem("loggedIn");
     this.role = localStorage.getItem("role");
   }
 
@@ -52,7 +54,7 @@ export class DashboardComponent implements OnInit {
       let fromDate = new Date(e.eventFrom);
       let toDate = new Date(e.eventTo);
 
-      let dayKey = fromDate.toDateString();
+      let dayKey = this.datePipe.transform(fromDate, 'fullDate');
 
       if (!this.eventsKeys.find(s => s == dayKey))
         this.eventsKeys.push(dayKey);

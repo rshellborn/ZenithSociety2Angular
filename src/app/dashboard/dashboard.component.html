@@ -5,7 +5,7 @@
       </div>
 
 
-      <div *ngIf="role == 'Member' || role == 'Admin'" class="text-center">
+      <div *ngIf="loggedIn == 'true' && (role == 'Member' || role == 'Admin')" class="text-center">
             <button class="btn btn-primary" (click)="getNextWeek(-1)">Previous Week</button>
             <button class="btn btn-primary" (click)="getNextWeek(1)">Next Week</button>
       </div><br/>

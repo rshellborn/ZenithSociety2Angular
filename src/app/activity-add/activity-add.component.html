@@ -1,6 +1,7 @@
 <div class="container container-small">
   <div>
     <h1 class="text-center">Add Activity</h1>
+        <span *ngIf="error" id="error">{{ error }}</span><br/>
     <div class="form-group">
       <label>Description: </label>
       <input class="form-control" type="text" [(ngModel)]="newActivity.description" placeholder="Description">

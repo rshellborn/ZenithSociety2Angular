@@ -11,7 +11,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let a of activities; let i=index;" (click)="onSelect(a)" [class.selected]="a === selected"> 
-        <td><time>{{a.creationDate | amDateFormat: 'YYYY-MM-DD hh:mmA'}}</time></td>
+        <td><time>{{a.creationDate | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>
         <td>{{a.description}}</td>
         <td class="text-center">
           <button class="btn btn-success" (click)="edit(a); $event.stopPropagation()">Edit</button>
