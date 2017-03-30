@@ -12,6 +12,14 @@ export class EventService {
   constructor(private http: Http) { } 
   
   //get all events
+  getAllEvents(): Promise<Event[]> {
+    return this.http.get(`${this.BASE_URL}/eventsapi/all`, {headers: this.headers})
+      .toPromise()
+      .then(response => response.json() as Event[])
+      .catch(this.handleError);
+  }
+
+  //get all events
   getEvents(): Promise<Event[]> {
     return this.http.get(`${this.BASE_URL}/eventsapi`, {headers: this.headers})
       .toPromise()

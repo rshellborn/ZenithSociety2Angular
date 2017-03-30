@@ -4,11 +4,13 @@ import { Token } from './token'
 import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
+import { Role } from './role'
 
 @Injectable()
 export class AuthService {
   private BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net"; 
   private headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
+  private roleHeaders = new Headers({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
 
   constructor(private http: Http) { }
 
@@ -25,6 +27,14 @@ export class AuthService {
       .post(`${this.BASE_URL}/connect/register`, data, {headers: this.headers})
       .toPromise()
       .then(response => response.json() as Object)
+      .catch(this.handleError);
+  }
+
+  //get all roles
+  getRoles(): Promise<Role[]> {
+    return this.http.get(`${this.BASE_URL}/rolesapi`, {headers: this.roleHeaders})
+      .toPromise()
+      .then(response => response.json() as Role[])
       .catch(this.handleError);
   }
 

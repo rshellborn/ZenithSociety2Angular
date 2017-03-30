@@ -9,7 +9,6 @@ import {EventService} from '../event.service';
   styleUrls: ['./event.component.css']
 })
 export class EventComponent implements OnInit {
-  selected: Event;
   events: Event[];
   
   constructor(
@@ -25,12 +24,8 @@ export class EventComponent implements OnInit {
     this.getEvents();
   }
 
-  onSelect(event: Event): void {
-    this.selected = event;
-  }
-
   getEvents(): void {
-  this.eventService.getEvents()
+  this.eventService.getAllEvents()
     .then(events => this.events = events);
   }
 
@@ -48,7 +43,6 @@ export class EventComponent implements OnInit {
         .delete(delEvent.eventId)
         .then(() => {
           this.events = this.events.filter(c => c !== delEvent);
-          if (this.selected === delEvent) { this.selected = null; }
         });
   }
 }
