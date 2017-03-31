@@ -13,6 +13,9 @@ import { Activity } from '../activity';
 export class ActivityAddComponent implements OnInit {
   selected: Activity;
   error: string;
+  role: string;
+  loggedIn: boolean;
+  username: string;
 
     @Input()
   activity: Activity;
@@ -29,6 +32,15 @@ export class ActivityAddComponent implements OnInit {
     if(localStorage.getItem('role') != "Admin") {
       this.router.navigate(['./home']);
     }
+
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+    this.role = localStorage.getItem("role");
+    this.username = localStorage.getItem("username");
   }
 
   goBack(): void {

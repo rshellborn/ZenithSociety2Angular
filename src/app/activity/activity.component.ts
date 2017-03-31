@@ -11,18 +11,30 @@ import {ActivityService} from '../activity.service';
 export class ActivityComponent implements OnInit {
   selected: Activity;
   activities: Activity[];
+  role: string;
+  loggedIn: boolean;
+  username: string;
   
   constructor(
   private activityService: ActivityService,
   private router: Router) { }
 
   ngOnInit(): void {
-    this.getActivities();
-
     //check if user is admin role
     if(localStorage.getItem('role') != "Admin") {
       this.router.navigate(['./home']);
     }
+    
+    this.getActivities();
+
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+    this.role = localStorage.getItem("role");
+    this.username = localStorage.getItem("username");
   }
 
   onSelect(activity: Activity): void {

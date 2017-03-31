@@ -36,7 +36,7 @@ import { RoleComponent } from './role/role.component';
     LoginComponent,
     LogoutComponent,
     RegisterComponent,
-    RoleComponent,
+    RoleComponent
   ],
   imports: [
     BrowserModule,

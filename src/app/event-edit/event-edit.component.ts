@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core'; 
 import { ActivatedRoute, Params, Router }   from '@angular/router';
-import { Location }                 from '@angular/common';
+import { Location, DatePipe }                 from '@angular/common';
 import { EventService } from '../event.service';
 import { Event } from '../event';
 
@@ -15,11 +15,15 @@ export class EventEditComponent implements OnInit {
   id: number;
   activityId: number;
   error: string;
+  role: string;
+  loggedIn: boolean;
+  username: string;
 
   constructor(
     private eventService: EventService,
     private route: ActivatedRoute,
     private router: Router,
+    private datePipe: DatePipe,
     private location: Location
   ) { }
 
@@ -28,6 +32,15 @@ export class EventEditComponent implements OnInit {
     if(localStorage.getItem('role') != "Admin") {
       this.router.navigate(['./home']);
     }
+
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+    this.role = localStorage.getItem("role");
+    this.username = localStorage.getItem("username");
 
     this.route.params.forEach((params: Params) => {
       this.id = +params['id'];
@@ -51,6 +64,14 @@ export class EventEditComponent implements OnInit {
       this.event.isActive = true;
     } else {
       this.event.isActive = false;
+    }
+
+    var date1 = this.datePipe.transform(this.event.eventFrom, 'dd/MM/yyyy');
+    var date2 = this.datePipe.transform(this.event.eventTo, 'dd/MM/yyyy');
+
+    if(date1 != date2) {
+      this.setError("Start time and end time must be on the same day.");
+      return;
     }
 
     if(this.event.eventFrom == undefined || 

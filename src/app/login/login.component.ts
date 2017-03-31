@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   @Input()
   result: Token;
   error: string;
+  loggedIn: boolean;
 
   constructor(
     private authService: AuthService,
@@ -21,6 +22,15 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+    if(this.loggedIn != false) {
+      this.router.navigate(['./home']);
+    }
   }
 
   login(login: Login): void {
@@ -52,6 +62,7 @@ export class LoginComponent implements OnInit {
     console.log(localStorage.getItem('token'));
   }
 
+  //get user and see if they belong to role
   getRole(): void {
     localStorage.setItem('role', "Admin");
   }

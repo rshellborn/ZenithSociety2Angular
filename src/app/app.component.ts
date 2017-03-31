@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { EventService } from './event.service';
 import { ActivityService } from './activity.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,8 +14,11 @@ export class AppComponent {
   role: string;
   username: string;
 
-  ngOnInit() {
+  constructor() { 
+  }
 
+  ngOnInit() {
+    console.log("calling onInit");
     if(localStorage.getItem("loggedIn") == "true") {
       this.loggedIn = true;
     } else {

@@ -15,10 +15,11 @@ export class DashboardComponent implements OnInit {
   eventDisplay: EventDisplay[];
   count: number = 0;
   role: string;
-  loggedIn: string;
+  loggedIn: boolean;
+  username: string;
 
-  eventsKeys: string[] = [];                          // array of keys in the eventsDictionary
-  eventsDictionary: { [key: string]: Event[] } = {}; // [ Day => Event ]
+  eventsKeys: string[] = [];                         
+  eventsDictionary: { [key: string]: Event[] } = {};
   
   constructor(
     private eventService: EventService,
@@ -29,15 +30,29 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.getEvents();
 
-    this.loggedIn = localStorage.getItem("loggedIn");
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
     this.role = localStorage.getItem("role");
+    this.username = localStorage.getItem("username");
   }
 
   getNextWeek(num: number): void {
     console.log("Get next week");
     this.eventsKeys = [];
     this.eventsDictionary = {};
-    this.eventService.getNewWeek(num)
+    this.eventService.getNextWeek()
+      .then(events => this.reformatData(events))
+  }
+
+  getPrevWeek(num: number): void {
+    console.log("Get previous week");
+    this.eventsKeys = [];
+    this.eventsDictionary = {};
+    this.eventService.getPrevWeek()
       .then(events => this.reformatData(events))
   }
 

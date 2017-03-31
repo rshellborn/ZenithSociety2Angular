@@ -5,6 +5,7 @@ import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import { Role } from './role'
+import { User } from './user'
 
 @Injectable()
 export class AuthService {
@@ -32,9 +33,26 @@ export class AuthService {
 
   //get all roles
   getRoles(): Promise<Role[]> {
-    return this.http.get(`${this.BASE_URL}/rolesapi`, {headers: this.roleHeaders})
+    return this.http.get(`${this.BASE_URL}/api/rolesapi`, {headers: this.roleHeaders})
       .toPromise()
       .then(response => response.json() as Role[])
+      .catch(this.handleError);
+  }
+
+  //get all roles
+  getUsers(): Promise<User[]> {
+    return this.http.get(`${this.BASE_URL}/api/usersapi`, {headers: this.roleHeaders})
+      .toPromise()
+      .then(response => response.json() as User[])
+      .catch(this.handleError);
+  }
+
+  //delete a role
+  delete(id: number): Promise<void> {
+    const url = `${this.BASE_URL}/rolesapi/${id}`;
+    return this.http.delete(url, {headers: this.headers})
+      .toPromise()
+      .then(() => null)
       .catch(this.handleError);
   }
 
