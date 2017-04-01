@@ -11,7 +11,7 @@ import { User } from './user'
 export class AuthService {
   private BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net"; 
   private headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
-  private roleHeaders = new Headers({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
+  private tokenHeaders = new Headers({'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token')});
 
   constructor(private http: Http) { }
 
@@ -32,27 +32,10 @@ export class AuthService {
   }
 
   //get all roles
-  getRoles(): Promise<Role[]> {
-    return this.http.get(`${this.BASE_URL}/api/rolesapi`, {headers: this.roleHeaders})
+  getRoles(username: string): Promise<String[]> {
+    return this.http.get(`${this.BASE_URL}/api/usersapi/` + username, {headers: this.tokenHeaders})
       .toPromise()
-      .then(response => response.json() as Role[])
-      .catch(this.handleError);
-  }
-
-  //get all roles
-  getUsers(): Promise<User[]> {
-    return this.http.get(`${this.BASE_URL}/api/usersapi`, {headers: this.roleHeaders})
-      .toPromise()
-      .then(response => response.json() as User[])
-      .catch(this.handleError);
-  }
-
-  //delete a role
-  delete(id: number): Promise<void> {
-    const url = `${this.BASE_URL}/rolesapi/${id}`;
-    return this.http.delete(url, {headers: this.headers})
-      .toPromise()
-      .then(() => null)
+      .then(response => response.json() as String[])
       .catch(this.handleError);
   }
 

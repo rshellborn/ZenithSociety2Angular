@@ -18,7 +18,6 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    console.log("calling onInit");
     if(localStorage.getItem("loggedIn") == "true") {
       this.loggedIn = true;
     } else {

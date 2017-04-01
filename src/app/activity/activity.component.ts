@@ -14,6 +14,7 @@ export class ActivityComponent implements OnInit {
   role: string;
   loggedIn: boolean;
   username: string;
+  adminRole: boolean;
   
   constructor(
   private activityService: ActivityService,
@@ -33,7 +34,12 @@ export class ActivityComponent implements OnInit {
       this.loggedIn = false;
     }
 
-    this.role = localStorage.getItem("role");
+     if(localStorage.getItem("adminRole") == "true") {
+      this.adminRole = true;
+    } else {
+      this.adminRole = false;
+    }
+
     this.username = localStorage.getItem("username");
   }
 

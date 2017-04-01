@@ -1,6 +1,8 @@
+import { Role } from './role';
+
 export class User {
-    userId: number;
-    username: string;
+    id: string;
+    userName: string;
     email: string;
-    roles: Object;
+    roles: Role[];
 }

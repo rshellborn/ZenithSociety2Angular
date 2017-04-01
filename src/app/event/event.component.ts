@@ -13,6 +13,7 @@ export class EventComponent implements OnInit {
   role: string;
   loggedIn: boolean;
   username: string;
+  adminRole: boolean;
   
   constructor(
   private eventService: EventService,
@@ -28,6 +29,12 @@ export class EventComponent implements OnInit {
       this.loggedIn = true;
     } else {
       this.loggedIn = false;
+    }
+
+     if(localStorage.getItem("adminRole") == "true") {
+      this.adminRole = true;
+    } else {
+      this.adminRole = false;
     }
 
     this.role = localStorage.getItem("role");
