@@ -13,6 +13,10 @@ export class ActivityEditComponent implements OnInit {
   @Input()
   activity: Activity;
   error: string;
+  role: string;
+  loggedIn: boolean;
+  username: string;
+  adminRole: boolean;
 
   constructor(
     private activityService: ActivityService,
@@ -32,6 +36,21 @@ export class ActivityEditComponent implements OnInit {
       this.activityService.getActivityById(id)
         .then(result => this.activity = result);
     });
+    
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+     if(localStorage.getItem("adminRole") == "true") {
+      this.adminRole = true;
+    } else {
+      this.adminRole = false;
+    }
+
+    this.role = localStorage.getItem("role");
+    this.username = localStorage.getItem("username");
   }
 
   goBack(): void {
@@ -39,6 +58,8 @@ export class ActivityEditComponent implements OnInit {
   }
 
   save(): void {
+    console.log(this.activity.description);
+
     if(this.activity.description.length == 0) {
         this.setError("Description cannot be empty.");
         return;

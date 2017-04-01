@@ -14,6 +14,7 @@ import { Token } from '../token';
 export class RegisterComponent implements OnInit {
   error: string;
   message: string;
+  loggedIn: boolean;
 
   constructor(
     private authService: AuthService,
@@ -21,6 +22,15 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+    if(this.loggedIn != false) {
+      this.router.navigate(['./home']);
+    }
   }
 
   register: Register = new Register();

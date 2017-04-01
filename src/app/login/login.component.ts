@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { EventService } from '../event.service';
 import { Router }   from '@angular/router';
 import { Login } from '../login';
 import { Token } from '../token';
+import { Event } from '../event';
 
 
 @Component({
@@ -14,13 +16,25 @@ export class LoginComponent implements OnInit {
   @Input()
   result: Token;
   error: string;
+  loggedIn: boolean;
+  users: Event[];
 
   constructor(
     private authService: AuthService,
+    private eventServe: EventService,
     private router: Router
   ) { }
 
   ngOnInit() {
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+    if(this.loggedIn != false) {
+      this.router.navigate(['./home']);
+    }
   }
 
   login(login: Login): void {
@@ -29,7 +43,6 @@ export class LoginComponent implements OnInit {
     this.authService.login(data)
         .then(result => { 
           this.getToken(result, login.username);
-          this.getRole();
           this.router.navigate(['./home']);
           })
         .catch(error => this.setError(error));
@@ -51,9 +64,4 @@ export class LoginComponent implements OnInit {
 
     console.log(localStorage.getItem('token'));
   }
-
-  getRole(): void {
-    localStorage.setItem('role', "Admin");
-  }
-
 }

@@ -30,7 +30,7 @@ export class EventService {
 
 //get one event by id
   getEventById(id: number): Promise<Event> {
-    return this.getEvents()
+    return this.getAllEvents()
       .then(result => result.find(event => event.eventId === id));
   }
 
@@ -62,8 +62,15 @@ export class EventService {
       .catch(this.handleError);
   }
 
-  getNewWeek(num: number): Promise<Event[]>{
-    return this.http.get(this.BASE_URL + '/eventsapi/' + num.toString(), {headers: this.headers})
+  getNextWeek(): Promise<Event[]>{
+    return this.http.get(this.BASE_URL + '/eventsapi/nextweek', {headers: this.headers})
+      .toPromise()
+      .then(response => response.json() as Event[])
+      .catch(this.handleError);
+  }
+
+  getPrevWeek(): Promise<Event[]>{
+    return this.http.get(this.BASE_URL + '/eventsapi/prevweek', {headers: this.headers})
       .toPromise()
       .then(response => response.json() as Event[])
       .catch(this.handleError);

@@ -10,6 +10,10 @@ import {EventService} from '../event.service';
 })
 export class EventComponent implements OnInit {
   events: Event[];
+  role: string;
+  loggedIn: boolean;
+  username: string;
+  adminRole: boolean;
   
   constructor(
   private eventService: EventService,
@@ -21,6 +25,21 @@ export class EventComponent implements OnInit {
       this.router.navigate(['./home']);
     }
     
+    if(localStorage.getItem("loggedIn") == "true") {
+      this.loggedIn = true;
+    } else {
+      this.loggedIn = false;
+    }
+
+     if(localStorage.getItem("adminRole") == "true") {
+      this.adminRole = true;
+    } else {
+      this.adminRole = false;
+    }
+
+    this.role = localStorage.getItem("role");
+    this.username = localStorage.getItem("username");
+
     this.getEvents();
   }
 

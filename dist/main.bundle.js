@@ -29,7 +29,7 @@ var AuthService = (function () {
         this.http = http;
         this.BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net";
         this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/x-www-form-urlencoded' });
-        this.roleHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') });
+        this.tokenHeaders = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') });
     }
     AuthService.prototype.login = function (data) {
         return this.http
@@ -46,8 +46,8 @@ var AuthService = (function () {
             .catch(this.handleError);
     };
     //get all roles
-    AuthService.prototype.getRoles = function () {
-        return this.http.get(this.BASE_URL + "/rolesapi", { headers: this.roleHeaders })
+    AuthService.prototype.getRoles = function (username) {
+        return this.http.get((this.BASE_URL + "/api/usersapi/") + username, { headers: this.tokenHeaders })
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(this.handleError);
@@ -72,10 +72,10 @@ var AuthService = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__event_service__ = __webpack_require__(93);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__event__ = __webpack_require__(348);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__event_service__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__event__ = __webpack_require__(349);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventEditComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -92,10 +92,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var EventEditComponent = (function () {
-    function EventEditComponent(eventService, route, router, location) {
+    function EventEditComponent(eventService, route, router, datePipe, location) {
         this.eventService = eventService;
         this.route = route;
         this.router = router;
+        this.datePipe = datePipe;
         this.location = location;
     }
     EventEditComponent.prototype.ngOnInit = function () {
@@ -104,6 +105,20 @@ var EventEditComponent = (function () {
         if (localStorage.getItem('role') != "Admin") {
             this.router.navigate(['./home']);
         }
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (localStorage.getItem("adminRole") == "true") {
+            this.adminRole = true;
+        }
+        else {
+            this.adminRole = false;
+        }
+        this.role = localStorage.getItem("role");
+        this.username = localStorage.getItem("username");
         this.route.params.forEach(function (params) {
             _this.id = +params['id'];
             _this.eventService.getEventById(_this.id)
@@ -124,6 +139,12 @@ var EventEditComponent = (function () {
         }
         else {
             this.event.isActive = false;
+        }
+        var date1 = this.datePipe.transform(this.event.eventFrom, 'dd/MM/yyyy');
+        var date2 = this.datePipe.transform(this.event.eventTo, 'dd/MM/yyyy');
+        if (date1 != date2) {
+            this.setError("Start time and end time must be on the same day.");
+            return;
         }
         if (this.event.eventFrom == undefined ||
             this.event.eventTo == undefined) {
@@ -147,13 +168,13 @@ var EventEditComponent = (function () {
     EventEditComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-event-edit',
-            template: __webpack_require__(788),
-            styles: [__webpack_require__(750)]
+            template: __webpack_require__(786),
+            styles: [__webpack_require__(749)]
         }), 
-        __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__event_service__["a" /* EventService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__event_service__["a" /* EventService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _d) || Object, (typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */]) === 'function' && _e) || Object])
+        __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__event_service__["a" /* EventService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__event_service__["a" /* EventService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _d) || Object, (typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */]) === 'function' && _e) || Object, (typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */]) === 'function' && _f) || Object])
     ], EventEditComponent);
     return EventEditComponent;
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
 }());
 //# sourceMappingURL=event-edit.component.js.map
 
@@ -164,7 +185,7 @@ var EventEditComponent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__activity_service__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__activity__ = __webpack_require__(344);
@@ -197,6 +218,19 @@ var ActivityAddComponent = (function () {
         if (localStorage.getItem('role') != "Admin") {
             this.router.navigate(['./home']);
         }
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (localStorage.getItem("adminRole") == "true") {
+            this.adminRole = true;
+        }
+        else {
+            this.adminRole = false;
+        }
+        this.username = localStorage.getItem("username");
     };
     ActivityAddComponent.prototype.goBack = function () {
         this.location.back();
@@ -228,8 +262,8 @@ var ActivityAddComponent = (function () {
     ActivityAddComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-activity-add',
-            template: __webpack_require__(781),
-            styles: [__webpack_require__(743)]
+            template: __webpack_require__(779),
+            styles: [__webpack_require__(742)]
         }), 
         __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__activity_service__["a" /* ActivityService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__activity_service__["a" /* ActivityService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */]) === 'function' && _d) || Object, (typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _e) || Object, (typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */]) === 'function' && _f) || Object])
     ], ActivityAddComponent);
@@ -245,7 +279,7 @@ var ActivityAddComponent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__activity_service__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__activity__ = __webpack_require__(344);
@@ -282,12 +316,27 @@ var ActivityEditComponent = (function () {
             _this.activityService.getActivityById(id)
                 .then(function (result) { return _this.activity = result; });
         });
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (localStorage.getItem("adminRole") == "true") {
+            this.adminRole = true;
+        }
+        else {
+            this.adminRole = false;
+        }
+        this.role = localStorage.getItem("role");
+        this.username = localStorage.getItem("username");
     };
     ActivityEditComponent.prototype.goBack = function () {
         this.location.back();
     };
     ActivityEditComponent.prototype.save = function () {
         var _this = this;
+        console.log(this.activity.description);
         if (this.activity.description.length == 0) {
             this.setError("Description cannot be empty.");
             return;
@@ -305,8 +354,8 @@ var ActivityEditComponent = (function () {
     ActivityEditComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-activity-edit',
-            template: __webpack_require__(782),
-            styles: [__webpack_require__(744)]
+            template: __webpack_require__(780),
+            styles: [__webpack_require__(743)]
         }), 
         __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__activity_service__["a" /* ActivityService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__activity_service__["a" /* ActivityService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _d) || Object, (typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */]) === 'function' && _e) || Object])
     ], ActivityEditComponent);
@@ -336,7 +385,7 @@ var Activity = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__activity_service__ = __webpack_require__(69);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ActivityComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -357,11 +406,24 @@ var ActivityComponent = (function () {
         this.router = router;
     }
     ActivityComponent.prototype.ngOnInit = function () {
-        this.getActivities();
         //check if user is admin role
         if (localStorage.getItem('role') != "Admin") {
             this.router.navigate(['./home']);
         }
+        this.getActivities();
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (localStorage.getItem("adminRole") == "true") {
+            this.adminRole = true;
+        }
+        else {
+            this.adminRole = false;
+        }
+        this.username = localStorage.getItem("username");
     };
     ActivityComponent.prototype.onSelect = function (activity) {
         this.selected = activity;
@@ -392,8 +454,8 @@ var ActivityComponent = (function () {
     ActivityComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'activity-component',
-            template: __webpack_require__(783),
-            styles: [__webpack_require__(745)]
+            template: __webpack_require__(781),
+            styles: [__webpack_require__(744)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__activity_service__["a" /* ActivityService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__activity_service__["a" /* ActivityService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _b) || Object])
     ], ActivityComponent);
@@ -409,8 +471,58 @@ var ActivityComponent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__event_service__ = __webpack_require__(93);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__event_service__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__activity_service__ = __webpack_require__(69);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var AppComponent = (function () {
+    function AppComponent() {
+        this.title = 'Zenith Society';
+    }
+    AppComponent.prototype.ngOnInit = function () {
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        this.role = localStorage.getItem("role");
+        this.username = localStorage.getItem("username");
+    };
+    AppComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'app-root',
+            template: __webpack_require__(782),
+            styles: [__webpack_require__(745)],
+            providers: [__WEBPACK_IMPORTED_MODULE_1__event_service__["a" /* EventService */], __WEBPACK_IMPORTED_MODULE_2__activity_service__["a" /* ActivityService */]]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AppComponent);
+    return AppComponent;
+}());
+//# sourceMappingURL=app.component.js.map
+
+/***/ }),
+
+/***/ 347:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__event_service__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(140);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_common__ = __webpack_require__(7);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DashboardComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -424,25 +536,87 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var DashboardComponent = (function () {
-    function DashboardComponent(eventService, datePipe) {
+    function DashboardComponent(eventService, authService, datePipe) {
         this.eventService = eventService;
+        this.authService = authService;
         this.datePipe = datePipe;
         this.count = 0;
-        this.eventsKeys = []; // array of keys in the eventsDictionary
-        this.eventsDictionary = {}; // [ Day => Event ]
+        this.message = false;
+        this.eventsKeys = [];
+        this.eventsDictionary = {};
     }
     DashboardComponent.prototype.ngOnInit = function () {
+        this.username = localStorage.getItem("username");
+        localStorage.setItem("adminRole", "false");
+        localStorage.setItem("memberRole", "false");
+        this.getRoles();
         this.getEvents();
-        this.loggedIn = localStorage.getItem("loggedIn");
-        this.role = localStorage.getItem("role");
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
     };
-    DashboardComponent.prototype.getNextWeek = function (num) {
+    DashboardComponent.prototype.getRoles = function () {
+        var _this = this;
+        this.authService.getRoles(this.username)
+            .then(function (roles) {
+            _this.checkRoles(roles);
+        });
+    };
+    DashboardComponent.prototype.checkRoles = function (roles) {
+        for (var _i = 0, roles_1 = roles; _i < roles_1.length; _i++) {
+            var role = roles_1[_i];
+            if (role == "Admin") {
+                console.log("admin");
+                localStorage.setItem("adminRole", "true");
+                this.adminRole = true;
+            }
+            else if (role == "Member") {
+                console.log("member");
+                localStorage.setItem("memberRole", "true");
+                this.memberRole = true;
+            }
+        }
+    };
+    DashboardComponent.prototype.getWeek = function (num) {
+        this.count += num;
+        if (this.count == -1) {
+            this.getPrevWeek();
+        }
+        else if (this.count == 1) {
+            this.getNextWeek();
+        }
+        else if (this.count == 0) {
+            this.getEvents();
+        }
+        else {
+            if (this.count == 2) {
+                this.count -= 1;
+            }
+            else {
+                this.count += 1;
+            }
+            return;
+        }
+    };
+    DashboardComponent.prototype.getNextWeek = function () {
         var _this = this;
         console.log("Get next week");
         this.eventsKeys = [];
         this.eventsDictionary = {};
-        this.eventService.getNewWeek(num)
+        this.eventService.getNextWeek()
+            .then(function (events) { return _this.reformatData(events); });
+    };
+    DashboardComponent.prototype.getPrevWeek = function () {
+        var _this = this;
+        console.log("Get previous week");
+        this.eventsKeys = [];
+        this.eventsDictionary = {};
+        this.eventService.getPrevWeek()
             .then(function (events) { return _this.reformatData(events); });
     };
     DashboardComponent.prototype.getEvents = function () {
@@ -454,6 +628,12 @@ var DashboardComponent = (function () {
         });
     };
     DashboardComponent.prototype.reformatData = function (data) {
+        if (data.length == 0) {
+            this.message = true;
+        }
+        else {
+            this.message = false;
+        }
         var _loop_1 = function(e) {
             var fromDate = new Date(e.eventFrom);
             var toDate = new Date(e.eventTo);
@@ -471,28 +651,28 @@ var DashboardComponent = (function () {
     DashboardComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-dashboard',
-            template: __webpack_require__(785),
-            styles: [__webpack_require__(747)]
+            template: __webpack_require__(783),
+            styles: [__webpack_require__(746)]
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__event_service__["a" /* EventService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__event_service__["a" /* EventService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */]) === 'function' && _b) || Object])
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__event_service__["a" /* EventService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__event_service__["a" /* EventService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_common__["a" /* DatePipe */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__angular_common__["a" /* DatePipe */]) === 'function' && _c) || Object])
     ], DashboardComponent);
     return DashboardComponent;
-    var _a, _b;
+    var _a, _b, _c;
 }());
 //# sourceMappingURL=dashboard.component.js.map
 
 /***/ }),
 
-/***/ 347:
+/***/ 348:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__event_service__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__event_service__ = __webpack_require__(70);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__activity_service__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__event__ = __webpack_require__(348);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__event__ = __webpack_require__(349);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventAddComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -524,6 +704,19 @@ var EventAddComponent = (function () {
         if (localStorage.getItem('role') != "Admin") {
             this.router.navigate(['./home']);
         }
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (localStorage.getItem("adminRole") == "true") {
+            this.adminRole = true;
+        }
+        else {
+            this.adminRole = false;
+        }
+        this.username = localStorage.getItem("username");
         this.getActivities();
         this.currentSelected = 1;
     };
@@ -542,10 +735,21 @@ var EventAddComponent = (function () {
     EventAddComponent.prototype.add = function (newEvent) {
         var _this = this;
         newEvent.enteredBy = localStorage.getItem("username");
-        newEvent.activityId = this.activityId;
+        newEvent.activityId = this.currentSelected;
         newEvent.creationDate = new Date();
         newEvent.eventFrom = this.newEvent.eventFrom;
         newEvent.eventTo = this.newEvent.eventTo;
+        var date1 = this.datePipe.transform(newEvent.eventFrom, 'dd/MM/yyyy');
+        var date2 = this.datePipe.transform(newEvent.eventTo, 'dd/MM/yyyy');
+        console.log(newEvent.enteredBy);
+        console.log(newEvent.activityId);
+        console.log(newEvent.creationDate);
+        console.log(newEvent.eventFrom);
+        console.log(newEvent.eventTo);
+        if (date1 != date2) {
+            this.setError("Start time and end time must be on the same day.");
+            return;
+        }
         if (newEvent.eventFrom == undefined ||
             newEvent.eventTo == undefined) {
             this.setError("Enter a start time and end time.");
@@ -566,7 +770,6 @@ var EventAddComponent = (function () {
         }
         this.eventService.create(newEvent)
             .then(function (newEvent) {
-            _this.selected = null;
             _this.router.navigate(['./events']);
         });
     };
@@ -580,8 +783,8 @@ var EventAddComponent = (function () {
     EventAddComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-event-add',
-            template: __webpack_require__(786),
-            styles: [__webpack_require__(748)]
+            template: __webpack_require__(784),
+            styles: [__webpack_require__(747)]
         }), 
         __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__event_service__["a" /* EventService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__event_service__["a" /* EventService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* ActivatedRoute */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["d" /* Location */]) === 'function' && _d) || Object, (typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _e) || Object, (typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_common__["a" /* DatePipe */]) === 'function' && _f) || Object, (typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_4__activity_service__["a" /* ActivityService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_4__activity_service__["a" /* ActivityService */]) === 'function' && _g) || Object])
     ], EventAddComponent);
@@ -592,7 +795,7 @@ var EventAddComponent = (function () {
 
 /***/ }),
 
-/***/ 348:
+/***/ 349:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -606,13 +809,13 @@ var Event = (function () {
 
 /***/ }),
 
-/***/ 349:
+/***/ 350:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__event_service__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__event_service__ = __webpack_require__(70);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -636,6 +839,20 @@ var EventComponent = (function () {
         if (localStorage.getItem('role') != "Admin") {
             this.router.navigate(['./home']);
         }
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (localStorage.getItem("adminRole") == "true") {
+            this.adminRole = true;
+        }
+        else {
+            this.adminRole = false;
+        }
+        this.role = localStorage.getItem("role");
+        this.username = localStorage.getItem("username");
         this.getEvents();
     };
     EventComponent.prototype.getEvents = function () {
@@ -661,8 +878,8 @@ var EventComponent = (function () {
     EventComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'event-component',
-            template: __webpack_require__(789),
-            styles: [__webpack_require__(751)]
+            template: __webpack_require__(787),
+            styles: [__webpack_require__(750)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__event_service__["a" /* EventService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__event_service__["a" /* EventService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _b) || Object])
     ], EventComponent);
@@ -673,14 +890,15 @@ var EventComponent = (function () {
 
 /***/ }),
 
-/***/ 350:
+/***/ 351:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__auth_service__ = __webpack_require__(140);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__token__ = __webpack_require__(685);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__event_service__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__token__ = __webpack_require__(684);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -695,12 +913,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = (function () {
-    function LoginComponent(authService, router) {
+    function LoginComponent(authService, eventServe, router) {
         this.authService = authService;
+        this.eventServe = eventServe;
         this.router = router;
     }
     LoginComponent.prototype.ngOnInit = function () {
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (this.loggedIn != false) {
+            this.router.navigate(['./home']);
+        }
     };
     LoginComponent.prototype.login = function (login) {
         var _this = this;
@@ -708,7 +937,6 @@ var LoginComponent = (function () {
         this.authService.login(data)
             .then(function (result) {
             _this.getToken(result, login.username);
-            _this.getRole();
             _this.router.navigate(['./home']);
         })
             .catch(function (error) { return _this.setError(error); });
@@ -726,34 +954,32 @@ var LoginComponent = (function () {
         localStorage.setItem('username', username);
         console.log(localStorage.getItem('token'));
     };
-    LoginComponent.prototype.getRole = function () {
-        localStorage.setItem('role', "Admin");
-    };
     __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(), 
-        __metadata('design:type', (typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__token__["a" /* Token */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__token__["a" /* Token */]) === 'function' && _a) || Object)
+        __metadata('design:type', (typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__token__["a" /* Token */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_4__token__["a" /* Token */]) === 'function' && _a) || Object)
     ], LoginComponent.prototype, "result", void 0);
     LoginComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-login',
-            template: __webpack_require__(790),
-            styles: [__webpack_require__(752)]
+            template: __webpack_require__(788),
+            styles: [__webpack_require__(751)]
         }), 
-        __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === 'function' && _c) || Object])
+        __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__event_service__["a" /* EventService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__event_service__["a" /* EventService */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === 'function' && _d) || Object])
     ], LoginComponent);
     return LoginComponent;
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
 }());
 //# sourceMappingURL=login.component.js.map
 
 /***/ }),
 
-/***/ 351:
+/***/ 352:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_component__ = __webpack_require__(346);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LogoutComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -766,38 +992,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var LogoutComponent = (function () {
-    function LogoutComponent(router) {
+    function LogoutComponent(router, app) {
         this.router = router;
+        this.app = app;
     }
     LogoutComponent.prototype.ngOnInit = function () {
         localStorage.setItem('loggedIn', "false");
-        localStorage.setItem('refresh', "true");
         this.router.navigate(['./home']);
     };
     LogoutComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-logout',
-            template: __webpack_require__(791),
-            styles: [__webpack_require__(753)]
+            template: __webpack_require__(789),
+            styles: [__webpack_require__(752)]
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _a) || Object])
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__app_component__["a" /* AppComponent */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__app_component__["a" /* AppComponent */]) === 'function' && _b) || Object])
     ], LogoutComponent);
     return LogoutComponent;
-    var _a;
+    var _a, _b;
 }());
 //# sourceMappingURL=logout.component.js.map
 
 /***/ }),
 
-/***/ 352:
+/***/ 353:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__register__ = __webpack_require__(684);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__register__ = __webpack_require__(683);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(140);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__(30);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -819,6 +1046,15 @@ var RegisterComponent = (function () {
         this.register = new __WEBPACK_IMPORTED_MODULE_1__register__["a" /* Register */]();
     }
     RegisterComponent.prototype.ngOnInit = function () {
+        if (localStorage.getItem("loggedIn") == "true") {
+            this.loggedIn = true;
+        }
+        else {
+            this.loggedIn = false;
+        }
+        if (this.loggedIn != false) {
+            this.router.navigate(['./home']);
+        }
     };
     RegisterComponent.prototype.registerUser = function (register) {
         var _this = this;
@@ -867,8 +1103,8 @@ var RegisterComponent = (function () {
     RegisterComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-register',
-            template: __webpack_require__(792),
-            styles: [__webpack_require__(754)]
+            template: __webpack_require__(790),
+            styles: [__webpack_require__(753)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === 'function' && _b) || Object])
     ], RegisterComponent);
@@ -876,58 +1112,6 @@ var RegisterComponent = (function () {
     var _a, _b;
 }());
 //# sourceMappingURL=register.component.js.map
-
-/***/ }),
-
-/***/ 353:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(140);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RoleComponent; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var RoleComponent = (function () {
-    function RoleComponent(authService, router) {
-        this.authService = authService;
-        this.router = router;
-    }
-    RoleComponent.prototype.ngOnInit = function () {
-        //check if user is admin role
-        if (localStorage.getItem('role') != "Admin") {
-            this.router.navigate(['./home']);
-        }
-        this.getRoles();
-    };
-    RoleComponent.prototype.getRoles = function () {
-        var _this = this;
-        this.authService.getRoles()
-            .then(function (roles) { return _this.roles = roles; });
-    };
-    RoleComponent = __decorate([
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            selector: 'app-role',
-            template: __webpack_require__(793),
-            styles: [__webpack_require__(755)]
-        }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]) === 'function' && _b) || Object])
-    ], RoleComponent);
-    return RoleComponent;
-    var _a, _b;
-}());
-//# sourceMappingURL=role.component.js.map
 
 /***/ }),
 
@@ -952,8 +1136,8 @@ webpackEmptyContext.id = 562;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(650);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(682);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(686);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(681);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(685);
 
 
 
@@ -971,18 +1155,17 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dyna
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dashboard_dashboard_component__ = __webpack_require__(346);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__event_event_component__ = __webpack_require__(349);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dashboard_dashboard_component__ = __webpack_require__(347);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__event_event_component__ = __webpack_require__(350);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__event_edit_event_edit_component__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__event_add_event_add_component__ = __webpack_require__(347);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__event_add_event_add_component__ = __webpack_require__(348);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__activity_activity_component__ = __webpack_require__(345);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__activity_edit_activity_edit_component__ = __webpack_require__(343);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__activity_add_activity_add_component__ = __webpack_require__(342);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__login_login_component__ = __webpack_require__(350);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__logout_logout_component__ = __webpack_require__(351);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__register_register_component__ = __webpack_require__(352);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__role_role_component__ = __webpack_require__(353);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__login_login_component__ = __webpack_require__(351);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__logout_logout_component__ = __webpack_require__(352);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__register_register_component__ = __webpack_require__(353);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -993,7 +1176,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -1017,8 +1199,7 @@ var routes = [
     { path: 'event/add', component: __WEBPACK_IMPORTED_MODULE_5__event_add_event_add_component__["a" /* EventAddComponent */] },
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_9__login_login_component__["a" /* LoginComponent */] },
     { path: 'logout', component: __WEBPACK_IMPORTED_MODULE_10__logout_logout_component__["a" /* LogoutComponent */] },
-    { path: 'register', component: __WEBPACK_IMPORTED_MODULE_11__register_register_component__["a" /* RegisterComponent */] },
-    { path: 'roles', component: __WEBPACK_IMPORTED_MODULE_12__role_role_component__["a" /* RoleComponent */] }
+    { path: 'register', component: __WEBPACK_IMPORTED_MODULE_11__register_register_component__["a" /* RegisterComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -1040,78 +1221,28 @@ var AppRoutingModule = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__event_service__ = __webpack_require__(93);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__activity_service__ = __webpack_require__(69);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-var AppComponent = (function () {
-    function AppComponent() {
-        this.title = 'Zenith Society';
-    }
-    AppComponent.prototype.ngOnInit = function () {
-        if (localStorage.getItem("loggedIn") == "true") {
-            this.loggedIn = true;
-        }
-        else {
-            this.loggedIn = false;
-        }
-        this.role = localStorage.getItem("role");
-        this.username = localStorage.getItem("username");
-    };
-    AppComponent = __decorate([
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            selector: 'app-root',
-            template: __webpack_require__(784),
-            styles: [__webpack_require__(746)],
-            providers: [__WEBPACK_IMPORTED_MODULE_1__event_service__["a" /* EventService */], __WEBPACK_IMPORTED_MODULE_2__activity_service__["a" /* ActivityService */]]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
-}());
-//# sourceMappingURL=app.component.js.map
-
-/***/ }),
-
-/***/ 682:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(137);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(133);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__(681);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__(346);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__event_edit_event_edit_component__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__event_event_component__ = __webpack_require__(349);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__dashboard_dashboard_component__ = __webpack_require__(346);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__event_event_component__ = __webpack_require__(350);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__dashboard_dashboard_component__ = __webpack_require__(347);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__app_routing_module__ = __webpack_require__(680);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__activity_activity_component__ = __webpack_require__(345);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__activity_edit_activity_edit_component__ = __webpack_require__(343);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_angular2_moment__ = __webpack_require__(687);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_angular2_moment__ = __webpack_require__(686);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_angular2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_angular2_moment__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__activity_add_activity_add_component__ = __webpack_require__(342);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_common__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__event_dropdown_event_dropdown_component__ = __webpack_require__(683);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__event_add_event_add_component__ = __webpack_require__(347);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__login_login_component__ = __webpack_require__(350);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__event_dropdown_event_dropdown_component__ = __webpack_require__(682);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__event_add_event_add_component__ = __webpack_require__(348);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__login_login_component__ = __webpack_require__(351);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__auth_service__ = __webpack_require__(140);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__logout_logout_component__ = __webpack_require__(351);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_ng2_bootstrap__ = __webpack_require__(765);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__register_register_component__ = __webpack_require__(352);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__role_role_component__ = __webpack_require__(353);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__logout_logout_component__ = __webpack_require__(352);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_ng2_bootstrap__ = __webpack_require__(763);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__register_register_component__ = __webpack_require__(353);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1122,7 +1253,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -1161,8 +1291,7 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_14__event_dropdown_event_dropdown_component__["a" /* EventDropdownComponent */],
                 __WEBPACK_IMPORTED_MODULE_16__login_login_component__["a" /* LoginComponent */],
                 __WEBPACK_IMPORTED_MODULE_18__logout_logout_component__["a" /* LogoutComponent */],
-                __WEBPACK_IMPORTED_MODULE_20__register_register_component__["a" /* RegisterComponent */],
-                __WEBPACK_IMPORTED_MODULE_21__role_role_component__["a" /* RoleComponent */],
+                __WEBPACK_IMPORTED_MODULE_20__register_register_component__["a" /* RegisterComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -1183,7 +1312,7 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 683:
+/***/ 682:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1230,8 +1359,8 @@ var EventDropdownComponent = (function () {
     EventDropdownComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-event-dropdown',
-            template: __webpack_require__(787),
-            styles: [__webpack_require__(749)]
+            template: __webpack_require__(785),
+            styles: [__webpack_require__(748)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__activity_service__["a" /* ActivityService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__activity_service__["a" /* ActivityService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__event_edit_event_edit_component__["a" /* EventEditComponent */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__event_edit_event_edit_component__["a" /* EventEditComponent */]) === 'function' && _b) || Object])
     ], EventDropdownComponent);
@@ -1242,7 +1371,7 @@ var EventDropdownComponent = (function () {
 
 /***/ }),
 
-/***/ 684:
+/***/ 683:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1256,7 +1385,7 @@ var Register = (function () {
 
 /***/ }),
 
-/***/ 685:
+/***/ 684:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1270,7 +1399,7 @@ var Token = (function () {
 
 /***/ }),
 
-/***/ 686:
+/***/ 685:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1365,6 +1494,125 @@ var ActivityService = (function () {
     var _a;
 }());
 //# sourceMappingURL=activity.service.js.map
+
+/***/ }),
+
+/***/ 70:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__(250);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(153);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var EventService = (function () {
+    function EventService(http) {
+        this.http = http;
+        this.BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net/api";
+        this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') });
+    }
+    //get all events
+    EventService.prototype.getAllEvents = function () {
+        return this.http.get(this.BASE_URL + "/eventsapi/all", { headers: this.headers })
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(this.handleError);
+    };
+    //get all events
+    EventService.prototype.getEvents = function () {
+        return this.http.get(this.BASE_URL + "/eventsapi", { headers: this.headers })
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(this.handleError);
+    };
+    //get one event by id
+    EventService.prototype.getEventById = function (id) {
+        return this.getAllEvents()
+            .then(function (result) { return result.find(function (event) { return event.eventId === id; }); });
+    };
+    //update an event
+    EventService.prototype.update = function (event) {
+        var url = this.BASE_URL + "/eventsapi/" + event.eventId;
+        return this.http
+            .put(url, JSON.stringify(event), { headers: this.headers })
+            .toPromise()
+            .then(function () { return event; })
+            .catch(this.handleError);
+    };
+    //add an event
+    EventService.prototype.create = function (newEvent) {
+        return this.http
+            .post(this.BASE_URL + "/eventsapi", JSON.stringify(newEvent), { headers: this.headers })
+            .toPromise()
+            .then(function (res) { return res.json().data; })
+            .catch(this.handleError);
+    };
+    //delete an event
+    EventService.prototype.delete = function (id) {
+        var url = this.BASE_URL + "/eventsapi/" + id;
+        return this.http.delete(url, { headers: this.headers })
+            .toPromise()
+            .then(function () { return null; })
+            .catch(this.handleError);
+    };
+    EventService.prototype.getNextWeek = function () {
+        return this.http.get(this.BASE_URL + '/eventsapi/nextweek', { headers: this.headers })
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(this.handleError);
+    };
+    EventService.prototype.getPrevWeek = function () {
+        return this.http.get(this.BASE_URL + '/eventsapi/prevweek', { headers: this.headers })
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(this.handleError);
+    };
+    EventService.prototype.handleError = function (error) {
+        console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
+    };
+    EventService = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(), 
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]) === 'function' && _a) || Object])
+    ], EventService);
+    return EventService;
+    var _a;
+}());
+//# sourceMappingURL=event.service.js.map
+
+/***/ }),
+
+/***/ 742:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(14)();
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
 
 /***/ }),
 
@@ -1566,43 +1814,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 754:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(14)();
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
 /***/ 755:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(14)();
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ 757:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -1851,204 +2063,102 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 757;
+webpackContext.id = 755;
 
+
+/***/ }),
+
+/***/ 779:
+/***/ (function(module, exports) {
+
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/Roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/UserRoles\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Add Activity</h1>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Description: </label>\n      <input class=\"form-control\" type=\"text\" [(ngModel)]=\"newActivity.description\" placeholder=\"Description\">\n    </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"add(newActivity)\">Add</button> \n  </div>\n</div>"
+
+/***/ }),
+
+/***/ 780:
+/***/ (function(module, exports) {
+
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/Roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/UserRoles\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div *ngIf=\"activity\" class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Activity Edit</h1>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Description: </label>\n      <input class=\"form-control\" type=\"text\" [(ngModel)]=\"activity.description\" placeholder=\"Description\">\n    </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"save()\">Save</button> \n  </div>\n</div>"
 
 /***/ }),
 
 /***/ 781:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Add Activity</h1>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Description: </label>\n      <input class=\"form-control\" type=\"text\" [(ngModel)]=\"newActivity.description\" placeholder=\"Description\">\n    </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"add(newActivity)\">Add</button> \n  </div>\n</div>"
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/Roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/UserRoles\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div class=\"container\">\n  <h1 class=\"text-center\">Activities</h1>\n\n  <table *ngIf=\"activities\" class=\"table table-striped table-bordered\">\n    <thead>\n      <tr>\n        <th class=\"text-center\">Creation Date</th>\n        <th class=\"text-center\">Description</th>\n        <th class=\"text-center\"><button class=\"btn btn-primary\" (click)=\"add(); $event.stopPropagation()\">Add</button></th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let a of activities; let i=index;\" (click)=\"onSelect(a)\" [class.selected]=\"a === selected\"> \n        <td><time>{{a.creationDate | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>\n        <td>{{a.description}}</td>\n        <td class=\"text-center\">\n          <button class=\"btn btn-success\" (click)=\"edit(a); $event.stopPropagation()\">Edit</button>\n          <button class=\"btn btn-danger\" (click)=\"delete(a); $event.stopPropagation()\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
 
 /***/ }),
 
 /***/ 782:
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"activity\" class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Activity Edit</h1>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Description: </label>\n      <input class=\"form-control\" type=\"text\" [(ngModel)]=\"activity.description\" placeholder=\"Description\">\n    </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"save()\">Save</button> \n  </div>\n</div>"
+module.exports = "<router-outlet></router-outlet>\n"
 
 /***/ }),
 
 /***/ 783:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h1 class=\"text-center\">Activities</h1>\n\n  <table *ngIf=\"activities\" class=\"table table-striped table-bordered\">\n    <thead>\n      <tr>\n        <th class=\"text-center\">Creation Date</th>\n        <th class=\"text-center\">Description</th>\n        <th class=\"text-center\"><button class=\"btn btn-primary\" (click)=\"add(); $event.stopPropagation()\">Add</button></th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let a of activities; let i=index;\" (click)=\"onSelect(a)\" [class.selected]=\"a === selected\"> \n        <td><time>{{a.creationDate | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>\n        <td>{{a.description}}</td>\n        <td class=\"text-center\">\n          <button class=\"btn btn-success\" (click)=\"edit(a); $event.stopPropagation()\">Edit</button>\n          <button class=\"btn btn-danger\" (click)=\"delete(a); $event.stopPropagation()\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/Roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/UserRoles\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div class=\"container\">\n      <div class=\"jumbotron\">\n            <h1>Zenith Society</h1>\n            <p>These are the activities happening this week.</p>\n      </div>\n\n\n      <div *ngIf=\"loggedIn == true && memberRole == true\" class=\"text-center\">\n            <button class=\"btn btn-primary\" (click)=\"getWeek(-1)\">Previous Week</button>\n            <button class=\"btn btn-primary\" (click)=\"getWeek(1)\">Next Week</button>\n      </div><br/>\n\n      <h3 *ngIf=\"message == true\" class=\"text-center\">There are no events this week.</h3>\n\n      <table id=\"table\" class=\"table table-striped table-bordered\">\n            <tbody *ngFor=\"let key of eventsKeys;\">\n            <tr>\n            <td class=\"success text-center\" colspan=\"2\">{{key}}</td>\n            </tr>\n            <tr *ngFor=\"let event of eventsDictionary[key];\">\n            <td >{{event.eventFrom+ \"-08:00\" | date: \"h:mm a\" }} - {{event.eventTo + \"-08:00\"| date: \"h:mm a\"}}</td>\n            <td >{{event.activity.description}}</td>\n            </tr>\n            </tbody>\n      </table>\n</div>"
 
 /***/ }),
 
 /***/ 784:
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && role == 'Admin'\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && role == 'Admin'\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && role == 'Admin'\"><a routerLink=\"/roles\">Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n<router-outlet></router-outlet>\n"
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/Roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/UserRoles\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Add Event</h1><br/>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Activity Id: </label>\n      <div *ngIf=\"activities\" style=\"display: inline;\">\n      <select class=\"form-control\" [(ngModel)]=\"currentSelected\" (ngModelChange)=\"onChange($event)\"> \n        <option *ngFor=\"let a of activities; let i=index;\" [ngValue]=\"a.activityId\">{{a.description}}</option>\n      </select>\n    </div>\n    </div>\n    <div class=\"form-group\">\n      <label>Start Date: </label>      \n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"newEvent.eventFrom\" placeholder=\"EventFrom\" required>\n    </div>\n    <div class=\"form-group\">\n      <label>End Date: </label>\n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"newEvent.eventTo\" placeholder=\"EventTo\" required>\n    </div>\n    <div class=\"form-group\">\n      <label>Is Active: </label>\n      <input style=\"display: inline;\" type=\"checkbox\" [(ngModel)]=\"newEvent.isActive\" placeholder=\"isActive\">\n    </div>\n  </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"add(newEvent)\">Add</button> \n  </div>\n</div>"
 
 /***/ }),
 
 /***/ 785:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n      <div class=\"jumbotron\">\n            <h1>Zenith Society</h1>\n            <p>These are the activities happening this week.</p>\n      </div>\n\n\n      <div *ngIf=\"loggedIn == 'true' && (role == 'Member' || role == 'Admin')\" class=\"text-center\">\n            <button class=\"btn btn-primary\" (click)=\"getNextWeek(-1)\">Previous Week</button>\n            <button class=\"btn btn-primary\" (click)=\"getNextWeek(1)\">Next Week</button>\n      </div><br/>\n\n      <table id=\"table\" class=\"table table-striped table-bordered\">\n            <tbody *ngFor=\"let key of eventsKeys;\">\n            <tr>\n            <td class=\"success text-center\" colspan=\"2\">{{key}}</td>\n            </tr>\n            <tr *ngFor=\"let event of eventsDictionary[key];\">\n            <td >{{event.eventFrom+ \"-08:00\" | date: \"h:mm a\" }} - {{event.eventTo + \"-08:00\"| date: \"h:mm a\"}}</td>\n            <td >{{event.activity.description}}</td>\n            </tr>\n            </tbody>\n      </table>\n</div>"
+module.exports = "<div *ngIf=\"activities\" style=\"display: inline;\">\n  <select [(ngModel)]=\"currentSelected\" (ngModelChange)=\"onChange($event)\" class=\"form-control\"> \n    <option *ngFor=\"let a of activities; let i=index;\" [ngValue]=\"a.activityId\">{{a.description}}</option>\n  </select>\n</div>\n"
 
 /***/ }),
 
 /***/ 786:
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<div class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Add Event</h1><br/>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Activity Id: </label>\n      <div *ngIf=\"activities\" style=\"display: inline;\">\n      <select class=\"form-control\" [(ngModel)]=\"currentSelected\" (ngModelChange)=\"onChange($event)\"> \n        <option *ngFor=\"let a of activities; let i=index;\" [ngValue]=\"a.activityId\">{{a.description}}</option>\n      </select>\n    </div>\n    </div>\n    <div class=\"form-group\">\n      <label>Start Date: </label>      \n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"newEvent.eventFrom\" placeholder=\"EventFrom\" required>\n    </div>\n    <div class=\"form-group\">\n      <label>End Date: </label>\n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"newEvent.eventTo\" placeholder=\"EventTo\" required>\n    </div>\n    <div class=\"form-group\">\n      <label>Is Active: </label>\n      <input style=\"display: inline;\" type=\"checkbox\" [(ngModel)]=\"newEvent.isActive\" placeholder=\"isActive\">\n    </div>\n  </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"add(newEvent)\">Add</button> \n  </div>\n</div>"
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/Roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/UserRoles\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div *ngIf=\"event\" class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Event Edit</h1>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Activity Id: </label>\n      <app-event-dropdown></app-event-dropdown>\n    </div>\n    <div class=\"form-group\">\n      <label>Start Date: </label>\n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"event.eventFrom\" placeholder=\"EventFrom\">\n    </div>\n    <div class=\"form-group\">\n      <label>End Date: </label>\n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"event.eventTo\" placeholder=\"EventTo\">\n    </div>\n    <div class=\"form-group\">\n      <label>Is Active: </label>\n      <input style=\"display: inline;\" type=\"checkbox\" [(ngModel)]=\"event.isActive\" placeholder=\"isActive\">\n    </div>\n  </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"save()\">Save</button> \n  </div>\n</div>"
 
 /***/ }),
 
 /***/ 787:
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"activities\" style=\"display: inline;\">\n  <select [(ngModel)]=\"currentSelected\" (ngModelChange)=\"onChange($event)\" class=\"form-control\"> \n    <option *ngFor=\"let a of activities; let i=index;\" [ngValue]=\"a.activityId\">{{a.description}}</option>\n  </select>\n</div>\n"
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/Roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a href=\"http://comp4976zenithsociety2.azurewebsites.net/UserRoles\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div class=\"container\">\n  <h1 class=\"text-center\">Events</h1>\n\n  <table id=\"table\" *ngIf=\"events\" class=\"table table-striped table-bordered\">\n    <thead>\n      <tr>\n        <th class=\"text-center\">Created By</th>\n        <th class=\"text-center\">Creation Date</th>\n        <th class=\"text-center\">Start Date</th>\n        <th class=\"text-center\">End Date</th>\n        <th class=\"text-center\">Activity Description</th>\n        <th class=\"text-center\">Is Active</th>\n        <th class=\"text-center\"><button class=\"btn btn-primary\" (click)=\"add(); $event.stopPropagation()\">Add</button></th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let e of events; let i=index;\"> \n        <td>{{e.enteredBy}}</td>\n        <td><time>{{e.creationDate+ \"-08:00\" | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>\n        <td><time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD h:mmA'}} </time></td>\n        <td><time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>\n        <td>{{e.activity.description}}</td>\n        <td><input type=\"checkbox\" [disabled]=\"true\" [(ngModel)]=\"e.isActive\" /></td>\n        <td class=\"text-center\">\n          <button class=\"btn btn-success\" (click)=\"edit(e); $event.stopPropagation()\">Edit</button>\n          <button class=\"btn btn-danger\" (click)=\"delete(e); $event.stopPropagation()\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
 
 /***/ }),
 
 /***/ 788:
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"event\" class=\"container container-small\">\n  <div>\n    <h1 class=\"text-center\">Event Edit</h1>\n        <span *ngIf=\"error\" id=\"error\">{{ error }}</span><br/>\n    <div class=\"form-group\">\n      <label>Activity Id: </label>\n      <app-event-dropdown></app-event-dropdown>\n    </div>\n    <div class=\"form-group\">\n      <label>Start Date: </label>\n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"event.eventFrom\" placeholder=\"EventFrom\">\n    </div>\n    <div class=\"form-group\">\n      <label>End Date: </label>\n      <input class=\"form-control\" type=\"datetime-local\" [(ngModel)]=\"event.eventTo\" placeholder=\"EventTo\">\n    </div>\n    <div class=\"form-group\">\n      <label>Is Active: </label>\n      <input style=\"display: inline;\" type=\"checkbox\" [(ngModel)]=\"event.isActive\" placeholder=\"isActive\">\n    </div>\n  </div>\n  <div class=\"text-center\">\n    <button class=\"btn btn-primary\" (click)=\"goBack()\">Back</button>\n    <button class=\"btn btn-success\" (click)=\"save()\">Save</button> \n  </div>\n</div>"
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/users\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div class=\"container\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <span id=\"error\">{{ error?.error_description }}</span><br/>\n\n        <label>Username: </label>\n        <input class=\"form-control\" [(ngModel)]=\"login.username\" placeholder=\"Username\">\n        <label>Password: </label>\n        <input class=\"form-control\" type=\"password\" [(ngModel)]=\"login.password\" placeholder=\"Password\">\n        <br/>\n        <div class=\"text-center\">\n            <button class=\"btn btn-primary\" (click)=\"login(login)\">Login</button> \n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
 /***/ 789:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h1 class=\"text-center\">Events</h1>\n\n  <table id=\"table\" *ngIf=\"events\" class=\"table table-striped table-bordered\">\n    <thead>\n      <tr>\n        <th class=\"text-center\">Created By</th>\n        <th class=\"text-center\">Creation Date</th>\n        <th class=\"text-center\">Start Date</th>\n        <th class=\"text-center\">End Date</th>\n        <th class=\"text-center\">Activity Description</th>\n        <th class=\"text-center\">Is Active</th>\n        <th class=\"text-center\"><button class=\"btn btn-primary\" (click)=\"add(); $event.stopPropagation()\">Add</button></th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let e of events; let i=index;\"> \n        <td>{{e.enteredBy}}</td>\n        <td><time>{{e.creationDate+ \"-08:00\" | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>\n        <td><time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD h:mmA'}} </time></td>\n        <td><time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>\n        <td>{{e.activity.description}}</td>\n        <td><input type=\"checkbox\" [disabled]=\"true\" [(ngModel)]=\"e.isActive\" /></td>\n        <td class=\"text-center\">\n          <button class=\"btn btn-success\" (click)=\"edit(e); $event.stopPropagation()\">Edit</button>\n          <button class=\"btn btn-danger\" (click)=\"delete(e); $event.stopPropagation()\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
+module.exports = "<p>\n  logout works!\n</p>\n"
 
 /***/ }),
 
 /***/ 790:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <span id=\"error\">{{ error?.error_description }}</span><br/>\n\n        <label>Username: </label>\n        <input class=\"form-control\" [(ngModel)]=\"login.username\" placeholder=\"Username\">\n        <label>Password: </label>\n        <input class=\"form-control\" type=\"password\" [(ngModel)]=\"login.password\" placeholder=\"Password\">\n        <br/>\n        <div class=\"text-center\">\n            <button class=\"btn btn-primary\" (click)=\"login(login)\">Login</button> \n        </div>\n    </div>\n</div>"
+module.exports = "<nav class=\"navbar navbar-default\" id=\"menu\">\n  <div class=\"navbar-header\">\n    <a class=\"navbar-brand\" href=\"home\">Zenith Society</a>\n  </div>\n\n\n  <ul class=\"nav navbar-nav\">\n    <li><a routerLink=\"/home\">Home</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/events\">Events</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/activities\">Activities</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/roles\">Roles</a></li>\n    <li *ngIf=\"loggedIn == true && adminRole == true\"><a routerLink=\"/users\">User Roles</a></li>\n  </ul>\n\n  <ul class=\"nav navbar-nav navbar-right\" style=\"margin-right: 2px;\">\n    <li *ngIf=\"loggedIn == true\"><a href=\"#\">Hello {{username}}!</a></li>\n    <li *ngIf=\"loggedIn == true\"><a routerLink=\"/logout\">Logout</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/register\">Register</a></li>\n    <li *ngIf=\"loggedIn == false\"><a routerLink=\"/login\">Login</a></li>\n  </ul>\n</nav>\n\n<div class=\"container\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <span id=\"error\">{{ error?.error_description }}</span>\n        <span id=\"message\">{{ message?.value }}</span><br/>\n\n        <label>Username: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.username\" placeholder=\"Username\">\n\n        <label>First Name: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.firstname\" placeholder=\"First Name\">\n\n        <label>Last Name: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.lastname\" placeholder=\"Last Name\">\n\n        <label>Email: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.email\" placeholder=\"Email\">\n\n\n        <label>Password: </label>\n        <input class=\"form-control\" type=\"password\" [(ngModel)]=\"register.password\" placeholder=\"Password\">\n         <label>Confirm Password: </label>\n        <input class=\"form-control\" type=\"password\" [(ngModel)]=\"register.confirmPassword\" placeholder=\"Password\">\n        <br/>\n        <div class=\"text-center\">\n            <button class=\"btn btn-primary\" (click)=\"registerUser(register)\">Register</button> \n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
-/***/ 791:
-/***/ (function(module, exports) {
-
-module.exports = "<p>\n  logout works!\n</p>\n"
-
-/***/ }),
-
-/***/ 792:
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"container\">\n    <div class=\"col-md-4 col-md-offset-4\">\n        <span id=\"error\">{{ error?.error_description }}</span>\n        <span id=\"message\">{{ message?.value }}</span><br/>\n\n        <label>Username: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.username\" placeholder=\"Username\">\n\n        <label>First Name: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.firstname\" placeholder=\"First Name\">\n\n        <label>Last Name: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.lastname\" placeholder=\"Last Name\">\n\n        <label>Email: </label>\n        <input class=\"form-control\" [(ngModel)]=\"register.email\" placeholder=\"Email\">\n\n\n        <label>Password: </label>\n        <input class=\"form-control\" type=\"password\" [(ngModel)]=\"register.password\" placeholder=\"Password\">\n         <label>Confirm Password: </label>\n        <input class=\"form-control\" type=\"password\" [(ngModel)]=\"register.confirmPassword\" placeholder=\"Password\">\n        <br/>\n        <div class=\"text-center\">\n            <button class=\"btn btn-primary\" (click)=\"registerUser(register)\">Register</button> \n        </div>\n    </div>\n</div>"
-
-/***/ }),
-
-/***/ 793:
-/***/ (function(module, exports) {
-
-module.exports = "<!--<div class=\"container\">\n  <h1 class=\"text-center\">Roles</h1>\n\n  <table id=\"table\" *ngIf=\"roles\" class=\"table table-striped table-bordered\">\n    <thead>\n      <tr>\n        <th class=\"text-center\">Name</th>\n        <th class=\"text-center\">Users</th>\n        <th class=\"text-center\"><button class=\"btn btn-primary\" (click)=\"add(); $event.stopPropagation()\">Add</button></th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let r of roles; let i=index;\"> \n        <td>{{r.name}}</td>\n        <td><time>{{}}</time></td>\n        <td><time>{{e.eventFrom | amDateFormat: 'YYYY-MM-DD h:mmA'}} </time></td>\n        <td><time>{{e.eventTo | amDateFormat: 'YYYY-MM-DD h:mmA'}}</time></td>\n        <td>{{e.activity.description}}</td>\n        <td><input type=\"checkbox\" [disabled]=\"true\" [(ngModel)]=\"e.isActive\" /></td>\n        <td class=\"text-center\">\n          <button class=\"btn btn-success\" (click)=\"edit(e); $event.stopPropagation()\">Edit</button>\n          <button class=\"btn btn-danger\" (click)=\"delete(e); $event.stopPropagation()\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>-->\n<p>works</p>"
-
-/***/ }),
-
-/***/ 825:
+/***/ 822:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(563);
 
 
-/***/ }),
-
-/***/ 93:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(133);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__(250);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(153);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventService; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var EventService = (function () {
-    function EventService(http) {
-        this.http = http;
-        this.BASE_URL = "http://comp4976zenithsociety2.azurewebsites.net/api";
-        this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') });
-    }
-    //get all events
-    EventService.prototype.getAllEvents = function () {
-        return this.http.get(this.BASE_URL + "/eventsapi/all", { headers: this.headers })
-            .toPromise()
-            .then(function (response) { return response.json(); })
-            .catch(this.handleError);
-    };
-    //get all events
-    EventService.prototype.getEvents = function () {
-        return this.http.get(this.BASE_URL + "/eventsapi", { headers: this.headers })
-            .toPromise()
-            .then(function (response) { return response.json(); })
-            .catch(this.handleError);
-    };
-    //get one event by id
-    EventService.prototype.getEventById = function (id) {
-        return this.getEvents()
-            .then(function (result) { return result.find(function (event) { return event.eventId === id; }); });
-    };
-    //update an event
-    EventService.prototype.update = function (event) {
-        var url = this.BASE_URL + "/eventsapi/" + event.eventId;
-        return this.http
-            .put(url, JSON.stringify(event), { headers: this.headers })
-            .toPromise()
-            .then(function () { return event; })
-            .catch(this.handleError);
-    };
-    //add an event
-    EventService.prototype.create = function (newEvent) {
-        return this.http
-            .post(this.BASE_URL + "/eventsapi", JSON.stringify(newEvent), { headers: this.headers })
-            .toPromise()
-            .then(function (res) { return res.json().data; })
-            .catch(this.handleError);
-    };
-    //delete an event
-    EventService.prototype.delete = function (id) {
-        var url = this.BASE_URL + "/eventsapi/" + id;
-        return this.http.delete(url, { headers: this.headers })
-            .toPromise()
-            .then(function () { return null; })
-            .catch(this.handleError);
-    };
-    EventService.prototype.getNewWeek = function (num) {
-        return this.http.get(this.BASE_URL + '/eventsapi/' + num.toString(), { headers: this.headers })
-            .toPromise()
-            .then(function (response) { return response.json(); })
-            .catch(this.handleError);
-    };
-    EventService.prototype.handleError = function (error) {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
-    };
-    EventService = __decorate([
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]) === 'function' && _a) || Object])
-    ], EventService);
-    return EventService;
-    var _a;
-}());
-//# sourceMappingURL=event.service.js.map
-
 /***/ })
 
-},[825]);
+},[822]);
 //# sourceMappingURL=main.bundle.js.map

@@ -20,7 +20,6 @@ import { AuthService } from './auth.service';
 import { LogoutComponent } from './logout/logout.component'
 import { AlertModule } from 'ng2-bootstrap';
 import { RegisterComponent } from './register/register.component';
-import { RoleComponent } from './role/role.component';
 
 @NgModule({
   declarations: [
@@ -35,8 +34,7 @@ import { RoleComponent } from './role/role.component';
     EventDropdownComponent,
     LoginComponent,
     LogoutComponent,
-    RegisterComponent,
-    RoleComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
