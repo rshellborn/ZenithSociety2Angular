@@ -78,6 +78,7 @@ export class DashboardComponent implements OnInit {
     } else if (this.count == 1) {
       this.getNextWeek();
     } else if (this.count == 0) {
+      console.log("getting this week");
       this.getEvents();
     } else {
       if(this.count == 2) {
@@ -106,6 +107,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getEvents(): void {
+    this.eventsKeys = [];
+    this.eventsDictionary = {};
     this.eventService.getEvents()
       .then(results => {
         this.events = results;
