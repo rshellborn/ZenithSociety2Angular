@@ -591,6 +591,7 @@ var DashboardComponent = (function () {
             this.getNextWeek();
         }
         else if (this.count == 0) {
+            console.log("getting this week");
             this.getEvents();
         }
         else {
@@ -621,6 +622,8 @@ var DashboardComponent = (function () {
     };
     DashboardComponent.prototype.getEvents = function () {
         var _this = this;
+        this.eventsKeys = [];
+        this.eventsDictionary = {};
         this.eventService.getEvents()
             .then(function (results) {
             _this.events = results;
