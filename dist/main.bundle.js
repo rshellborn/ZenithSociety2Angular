@@ -573,6 +573,7 @@ var DashboardComponent = (function () {
             if (role == "Admin") {
                 console.log("admin");
                 localStorage.setItem("adminRole", "true");
+                localStorage.setItem("role", "Admin");
                 this.adminRole = true;
             }
             else if (role == "Member") {
