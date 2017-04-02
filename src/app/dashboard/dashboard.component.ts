@@ -62,6 +62,7 @@ export class DashboardComponent implements OnInit {
       if(role == "Admin") {
         console.log("admin");
         localStorage.setItem("adminRole", "true");
+        localStorage.setItem("role", "Admin");
         this.adminRole = true;
       } else if (role == "Member") {
         console.log("member");
